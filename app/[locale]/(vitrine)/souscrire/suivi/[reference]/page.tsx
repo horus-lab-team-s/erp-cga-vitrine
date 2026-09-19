@@ -82,8 +82,12 @@ async function Suivi({ souscription: s }: { souscription: Souscription }) {
   return (
     <>
       <p style={{ color: "#4f5b60", marginTop: 0 }}>
-        {s.libelle}
-        {s.formule ? ` (${s.formule.replaceAll("_", " ").toLowerCase()})` : ""} · engagée le {dateCourte(s.engagee_le.slice(0, 10))} ·{" "}
+        {/* ⚠️ Même correction que sur le devis : le libellé porte déjà la
+            formule en toutes lettres, et la parenthèse la redisait sous sa
+            forme interne, sans accent — « Impôt libératoire (liberatoire) ».
+            Ici c'est plus grave que sur le devis : c'est la page que le client
+            rouvre chaque fois qu'il veut savoir où en est son dossier. */}
+        {s.libelle} · engagée le {dateCourte(s.engagee_le.slice(0, 10))} ·{" "}
         {montantFcfa(s.montant)}
       </p>
       <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{LIBELLES_ETAT_SOUSCRIPTION[s.etat]}</p>

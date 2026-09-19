@@ -61,11 +61,20 @@ function Devis({ devis }: { devis: import("@/app/lib/souscription").Devis }) {
       <ul style={{ paddingLeft: 18 }}>
         {devis.lignes.map((l) => (
           <li key={`${l.service}-${l.formule ?? ""}`}>
-            {l.libelle}
-            {l.formule ? ` (${l.formule.replaceAll("_", " ").toLowerCase()})` : ""} :{" "}
+            {/* ⚠️ LA CLÉ TECHNIQUE DE LA FORMULE NE S'IMPRIME PLUS.
+                Le devis annonçait « Impôt libératoire (liberatoire) » : le
+                libellé porte déjà la formule en toutes lettres, et la
+                parenthèse ajoutait la MÊME chose sous sa forme interne, sans
+                accent. Sur un document commercial que le client garde. */}
+            {l.libelle} :{" "}
             {l.chiffree && l.montant ? montantFcfa(l.montant) : "sur étude"}
             {l.periodicite === "MENSUELLE" ? " par mois" : l.periodicite === "ANNUELLE" ? " par an" : ""}
-            {l.precision ? ` · ${l.precision}` : ""}
+            {/* ⚠️ L'UNITÉ N'A DE SENS QUE SANS MONTANT.
+                Elle donnait « 12 500 FCFA par mois · FCFA par mois » : le
+                montant porte déjà la devise, la périodicité porte déjà le
+                rythme. Sur une ligne « sur étude », en revanche, elle est la
+                seule chose qui dise dans quelle unité l'étude répondra. */}
+            {!l.chiffree && l.precision ? ` · ${l.precision}` : ""}
           </li>
         ))}
       </ul>
