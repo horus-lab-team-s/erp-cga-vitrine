@@ -2,10 +2,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
 
+import { ADRESSE_CONNEXION } from "@/app/lib/adresse-console";
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { FormulaireContact } from "@/app/components/vitrine/FormulaireContact";
 import { IconeVitrine } from "@/app/components/vitrine/IconeVitrine";
-import { Link } from "@/i18n/navigation";
 
 export async function generateMetadata({
   params,
@@ -169,10 +169,10 @@ function Formulaire() {
           >
             {t("dejaClientDetail")}
           </p>
-          <Link href="/connexion" className="bouton bouton--clair bouton--large">
+          <a href={ADRESSE_CONNEXION} className="bouton bouton--clair bouton--large">
             {t("ouvrirEspace")}
             <IconeVitrine nom="connexion" taille={16} />
-          </Link>
+          </a>
         </aside>
       </div>
     </section>

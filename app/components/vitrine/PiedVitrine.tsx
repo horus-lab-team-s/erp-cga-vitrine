@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { ADRESSE_CONNEXION } from "@/app/lib/adresse-console";
 import { Link } from "@/i18n/navigation";
 import { FORMES_JURIDIQUES, lienForme } from "@/app/lib/services-vitrine";
 import { IconeVitrine } from "./IconeVitrine";
@@ -124,7 +125,7 @@ export function PiedVitrine() {
                 <Link href="/estimation">{nav("estimation")}</Link>
               </li>
               <li>
-                <Link href="/connexion">{commun("actions.espaceClient")}</Link>
+                <a href={ADRESSE_CONNEXION}>{commun("actions.espaceClient")}</a>
               </li>
             </ul>
           </div>

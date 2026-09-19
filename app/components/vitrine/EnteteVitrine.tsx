@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
+import { ADRESSE_CONNEXION } from "@/app/lib/adresse-console";
 import { basculerTheme, lireTheme, souscrireTheme, themeParDefaut } from "@/app/lib/preferences";
 import { ENTREES_NAV, SERVICES_VITRINE } from "@/app/lib/services-vitrine";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
@@ -321,13 +322,17 @@ export function EnteteVitrine() {
                 <IconeVitrine nom={versSombre ? "lune" : "soleil"} />
               </button>
 
-              <Link
-                href="/connexion"
+              {/* ⚠️ Une ancre, et non le `Link` internationalisé : la console
+                  est une AUTRE application, souvent un autre domaine. `Link` y
+                  ajouterait le préfixe de langue de la vitrine et produirait une
+                  adresse qui n'existe pas là-bas. */}
+              <a
+                href={ADRESSE_CONNEXION}
                 className="bouton bouton--secondaire pilule__espace-client"
               >
                 <IconeVitrine nom="connexion" taille={16} />
                 {commun("actions.espaceClient")}
-              </Link>
+              </a>
 
               <Link href="/contact" className="bouton bouton--principal">
                 <IconeVitrine nom="whatsapp" taille={16} />
@@ -452,14 +457,14 @@ export function EnteteVitrine() {
                   ),
                 )}
 
-                <Link
-                  href="/connexion"
+                <a
+                  href={ADRESSE_CONNEXION}
                   className="bouton bouton--secondaire bouton--large"
                   style={{ marginTop: 12, minHeight: 52 }}
                 >
                   <IconeVitrine nom="connexion" taille={16} />
                   {commun("actions.espaceClient")}
-                </Link>
+                </a>
                 <a
                   href={`tel:${commun("cabinet.telephone").replace(/\s/g, "")}`}
                   className="bouton bouton--principal bouton--large"

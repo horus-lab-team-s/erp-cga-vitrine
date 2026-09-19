@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { ADRESSE_CONNEXION } from "@/app/lib/adresse-console";
 import { dateCourte, montantFcfa } from "@/app/lib/formats";
 import { aujourdhui } from "@/app/lib/portefeuille";
 import {
@@ -9,7 +10,6 @@ import {
   lireSouscription,
   type Souscription,
 } from "@/app/lib/souscription";
-import { Link } from "@/i18n/navigation";
 
 export const metadata: Metadata = {
   title: "Suivi de votre souscription — CGA Broad Range",
@@ -95,7 +95,7 @@ async function Suivi({ souscription: s }: { souscription: Souscription }) {
       {s.prend_effet_le && <p>Prend effet le {dateCourte(s.prend_effet_le)}.</p>}
       {s.etat === "ACTIVEE" && s.compte && (
         <p>
-          <Link href="/connexion">Se connecter à mon espace</Link>
+          <a href={ADRESSE_CONNEXION}>Se connecter à mon espace</a>
         </p>
       )}
       {echeancier && (
