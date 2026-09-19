@@ -29,8 +29,10 @@
 
 import { cookies } from "next/headers";
 
-/** Interne au réseau : jamais `NEXT_PUBLIC_`, voir l'en-tête. */
-export const BASE_API = process.env.API_URL ?? "http://127.0.0.1:8000";
+import { ADRESSE_API } from "./adresse-api";
+
+/** Interne au réseau : jamais `NEXT_PUBLIC_`, voir l'en-tête et `adresse-api.ts`. */
+export const BASE_API = ADRESSE_API;
 
 /** Le nom du témoin, aligné sur `NOM_TEMOIN` du contexte K. */
 export const TEMOIN_SESSION = "cga_session";

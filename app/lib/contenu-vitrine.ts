@@ -1,3 +1,4 @@
+import { ADRESSE_API } from "./adresse-api";
 import {
   ARTICLES,
   RUBRIQUES,
@@ -53,7 +54,10 @@ import { INSTITUTIONS, type Institution } from "@/app/lib/partenaires";
  */
 
 /** Racine de l'API. Réglable par environnement — préproduction, conteneur, poste. */
-const API = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
+// ⚠️ L'adresse vient d'`adresse-api.ts`, et il y a une histoire derrière : ce
+// fichier lisait `NEXT_PUBLIC_API_URL`, que personne ne posait jamais. Le
+// contenu éditorial venait donc toujours du secours.
+const API = ADRESSE_API;
 
 /** Durée de cache d'une lecture de contenu, en secondes. */
 const FRAICHEUR = 300;
@@ -82,10 +86,26 @@ async function lire<T>(chemin: string): Promise<Lecture<T>> {
     });
     // 404 compris : un article absent du backend doit être cherché au secours
     // avant qu'on conclue qu'il n'existe pas.
-    if (!reponse.ok) return { repondu: false };
+    //
+    // ⚠️ MAIS ON LE DIT. Ce cas ne laissait aucune trace, et l'en-tête de ce
+    // fichier promet pourtant que « l'exploitant doit le voir ». Seule
+    // l'exception était tracée, c'est-à-dire le serveur absent — pas le serveur
+    // qui répond mal.
+    //
+    // Le défaut s'est montré de la pire façon : un tout autre service écoutait
+    // sur le port par défaut et répondait 404. Le site basculait au secours
+    // **en silence**, les pages sortaient en 200, et rien nulle part ne disait
+    // que le contenu affiché n'était pas celui du cabinet. Un repli muet est un
+    // mensonge tranquille.
+    if (!reponse.ok) {
+      console.warn(
+        `[vitrine] le serveur a répondu ${reponse.status} sur ${chemin} — passage au secours`,
+      );
+      return { repondu: false };
+    }
     return { repondu: true, valeur: (await reponse.json()) as T };
   } catch (erreur) {
-    console.warn(`[vitrine] backend injoignable sur ${chemin} — passage au secours`, erreur);
+    console.warn(`[vitrine] serveur injoignable sur ${chemin} — passage au secours`, erreur);
     return { repondu: false };
   }
 }
