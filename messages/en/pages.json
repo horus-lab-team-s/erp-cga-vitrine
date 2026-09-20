@@ -878,5 +878,13 @@
         "lien": "/contact"
       }
     ]
+  },
+  "panne": {
+    "kicker": "Error 500",
+    "titre": "This page could not be displayed",
+    "detail": "Something failed on our side, not yours. The incident is recorded; you can try again right away, as most resolve on their own.",
+    "prudence": "If you were sending a form, check before starting over: this page cannot tell whether it went through.",
+    "reference": "Reference to quote if you call the firm",
+    "reessayer": "Try again"
   }
 }

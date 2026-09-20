@@ -878,5 +878,13 @@
         "lien": "/contact"
       }
     ]
+  },
+  "panne": {
+    "kicker": "Erreur 500",
+    "titre": "Cette page n'a pas pu s'afficher",
+    "detail": "Une panne est survenue de notre côté, et non du vôtre. L'incident est enregistré ; vous pouvez réessayer tout de suite, la plupart se résolvent seuls.",
+    "prudence": "Si vous étiez en train d'envoyer un formulaire, vérifiez avant de recommencer : cette page ne sait pas dire si l'envoi a abouti.",
+    "reference": "Référence à citer si vous appelez le cabinet",
+    "reessayer": "Réessayer"
   }
 }
