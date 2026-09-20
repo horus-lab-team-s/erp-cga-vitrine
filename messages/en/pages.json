@@ -850,5 +850,33 @@
         }
       ]
     }
+  },
+  "introuvable": {
+    "titre": "Page not found",
+    "kicker": "Error 404",
+    "detail": "The address you asked for matches no page on this site. The link you followed may be out of date, or the address was mistyped.",
+    "pistesTitre": "What you were looking for may be here",
+    "pistes": [
+      {
+        "titre": "Start my company",
+        "detail": "From the intention to the trade register, form by form.",
+        "lien": "/creer-mon-entreprise"
+      },
+      {
+        "titre": "Become a member",
+        "detail": "What membership of the centre entitles you to.",
+        "lien": "/devenir-adherent"
+      },
+      {
+        "titre": "Training",
+        "detail": "The catalogue and the calendar of sessions.",
+        "lien": "/formations"
+      },
+      {
+        "titre": "Contact us",
+        "detail": "Phone, WhatsApp, email and branch addresses.",
+        "lien": "/contact"
+      }
+    ]
   }
 }

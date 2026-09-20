@@ -850,5 +850,33 @@
         }
       ]
     }
+  },
+  "introuvable": {
+    "titre": "Page introuvable",
+    "kicker": "Erreur 404",
+    "detail": "L'adresse demandée ne correspond à aucune page du site. Le lien que vous avez suivi est peut-être ancien, ou l'adresse a été saisie de travers.",
+    "pistesTitre": "Ce que vous cherchiez se trouve peut-être ici",
+    "pistes": [
+      {
+        "titre": "Créer mon entreprise",
+        "detail": "De l'intention au registre du commerce, forme par forme.",
+        "lien": "/creer-mon-entreprise"
+      },
+      {
+        "titre": "Devenir adhérent",
+        "detail": "Ce que l'adhésion au centre ouvre comme droits.",
+        "lien": "/devenir-adherent"
+      },
+      {
+        "titre": "Formations",
+        "detail": "Le catalogue et le calendrier des sessions.",
+        "lien": "/formations"
+      },
+      {
+        "titre": "Nous joindre",
+        "detail": "Téléphone, WhatsApp, courriel et adresse des agences.",
+        "lien": "/contact"
+      }
+    ]
   }
 }
