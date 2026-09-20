@@ -650,11 +650,51 @@
   width: 100%;
 }
 
+/* ── L'icône du tiroir ────────────────────────────────────────────────────
+   ⚠️ Mesuré à 390 px : les sept entrées s'empilaient à la même abscisse, même
+   graisse, même longueur apparente. Sept lignes de texte que l'œil ne sépare
+   plus, et qu'il faut lire une à une pour viser. L'icône donne à chacune une
+   silhouette, et c'est elle qu'on reconnaît avant le mot.
+
+   La pastille a un fond à elle : posée sur le blanc du tiroir, une icône nue à
+   17 px se perdait entre deux lignes de texte gras. */
+.tiroir__icone {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--brand-indigo-100);
+  color: var(--brand-indigo-700);
+}
+
+/* Un filet entre les entrées : sans lui, seul le blanc les sépare, et l'on ne
+   sait pas où finit une cible tactile et où commence la suivante. Pas sur la
+   dernière, qui touche les deux boutons du bas. */
+.tiroir__lien + .tiroir__lien {
+  border-top: 1px solid var(--line-100);
+  border-radius: 0;
+}
+
 .tiroir__lien:hover,
 .tiroir__lien[aria-current="page"] {
   background: var(--brand-indigo-100);
   color: var(--brand-indigo-700);
   text-decoration: none;
+}
+
+/* ⚠️ LA PAGE COURANTE SE MARQUE DEUX FOIS, par le fond ET par un trait à
+   gauche. Le § 10.7 l'impose : la couleur ne porte jamais seule une
+   information. Un fond indigo pâle sur du blanc ne se voit pas au soleil, ni
+   pour qui distingue mal les teintes. */
+.tiroir__lien[aria-current="page"] {
+  box-shadow: inset 3px 0 0 var(--brand-magenta-600);
+}
+
+.tiroir__lien[aria-current="page"] .tiroir__icone {
+  background: var(--brand-magenta-600);
+  color: #fff;
 }
 
 .tiroir__chevron {

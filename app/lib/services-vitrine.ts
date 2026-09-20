@@ -171,12 +171,26 @@ export function lienForme(forme: (typeof FORMES_JURIDIQUES)[number]) {
  * après « Contactez-nous », l'aurait rendu invisible — or c'est par lui que le
  * trafic de Facebook et de WhatsApp entrera sur le site.
  */
+/**
+ * ⚠️ L'ICÔNE NE SERT QU'AU TIROIR MOBILE, et c'est voulu.
+ *
+ * Sur le bandeau de bureau, sept libellés alignés se distinguent par leur place
+ * et leur longueur : une icône n'y ajouterait qu'un bruit. Dans le tiroir, ils
+ * s'empilent tous à la même abscisse, avec la même graisse et la même
+ * longueur apparente — sept lignes que l'œil ne sépare plus. L'icône est alors
+ * le seul repère qui permette de viser sans lire.
+ */
 export const ENTREES_NAV = [
-  { cle: "services", href: "/creer-mon-entreprise", megaMenu: true },
-  { cle: "adherent", href: "/devenir-adherent", megaMenu: false },
-  { cle: "formations", href: "/formations", megaMenu: false },
-  { cle: "cabinet", href: "/le-cabinet", megaMenu: false },
-  { cle: "blog", href: "/blog", megaMenu: false },
-  { cle: "estimation", href: "/estimation", megaMenu: false },
-  { cle: "contact", href: "/contact", megaMenu: false },
-] as const;
+  { cle: "services", href: "/creer-mon-entreprise", megaMenu: true, icone: "creation" },
+  { cle: "adherent", href: "/devenir-adherent", megaMenu: false, icone: "adhesion" },
+  { cle: "formations", href: "/formations", megaMenu: false, icone: "formations" },
+  { cle: "cabinet", href: "/le-cabinet", megaMenu: false, icone: "immeuble" },
+  { cle: "blog", href: "/blog", megaMenu: false, icone: "journal" },
+  { cle: "estimation", href: "/estimation", megaMenu: false, icone: "abattement" },
+  { cle: "contact", href: "/contact", megaMenu: false, icone: "dialogue" },
+] as const satisfies readonly {
+  cle: string;
+  href: string;
+  megaMenu: boolean;
+  icone: NomIcone;
+}[];

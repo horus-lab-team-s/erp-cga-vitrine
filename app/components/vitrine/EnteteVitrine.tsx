@@ -305,9 +305,16 @@ export function EnteteVitrine() {
                 value={langue}
                 onChange={(e) => routeur.replace(chemin, { locale: e.target.value as "fr" | "en" })}
               >
+                {/* ⚠️ L'ABRÉGÉ, ET NON LE NOM ENTIER.
+                    « 🇫🇷 Français » occupait 40 % de la barre sur un téléphone,
+                    pour un réglage qu'un visiteur camerounais ne touchera
+                    peut-être jamais. Le drapeau porte déjà l'information ;
+                    « FR » lève le doute pour qui ne distingue pas deux
+                    drapeaux. Le nom entier reste dans l'étiquette accessible du
+                    sélecteur, qui est lue par les lecteurs d'écran. */}
                 {LANGUES.map((l) => (
                   <option key={l.code} value={l.code}>
-                    {l.drapeau} {l.libelle}
+                    {l.drapeau} {l.abrege}
                   </option>
                 ))}
               </select>
@@ -440,6 +447,9 @@ export function EnteteVitrine() {
                       onClick={() => setNiveauServices(true)}
                       aria-expanded={niveauServices}
                     >
+                      <span className="tiroir__icone">
+                        <IconeVitrine nom={entree.icone} taille={17} />
+                      </span>
                       {t(entree.cle)}
                       <span className="tiroir__chevron">
                         <IconeVitrine nom="fleche" taille={16} />
@@ -452,6 +462,9 @@ export function EnteteVitrine() {
                       className="tiroir__lien"
                       aria-current={estCourante(chemin, entree.href) ? "page" : undefined}
                     >
+                      <span className="tiroir__icone">
+                        <IconeVitrine nom={entree.icone} taille={17} />
+                      </span>
                       {t(entree.cle)}
                     </Link>
                   ),
