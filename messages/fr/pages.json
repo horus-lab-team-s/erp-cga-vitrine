@@ -603,6 +603,62 @@
       "tarifDetail": "Tout compris : contrat, adresse, réception du courrier, signalement des plis administratifs et renouvellement sans frais de dossier. La réexpédition à l'étranger et l'usage prolongé des salles de réunion se facturent à part.",
       "tarifAppel": "Souscrite en même temps que votre création, la domiciliation entre dans l'estimation en ligne."
     },
+    "paie": {
+      "kicker": "Paie déléguée",
+      "titre": "Vos bulletins sortent à date, et la déclaration part avec",
+      "detail": "Vous nous confiez vos contrats de travail. Nous produisons chaque mois les bulletins de vos salariés, la déclaration mensuelle des personnels employés et l'état des cotisations à verser à la CNPS.",
+      "action": "Confier ma paie",
+      "prestationsKicker": "Ce qui est compris",
+      "prestationsTitre": "Chaque mois, sans que vous ayez à y penser",
+      "prestations": [
+        "Le bulletin de chaque salarié, calculé sur son contrat en vigueur ce mois-là",
+        "Les cotisations sociales, salariales et patronales, et la part accidents du travail selon votre groupe de risque",
+        "Les retenues sur salaires : impôt sur le revenu et taxes assises",
+        "Les avantages en nature intégrés au calcul : logement, véhicule, eau, électricité",
+        "La déclaration mensuelle des personnels employés, prête à déposer",
+        "Le fichier du personnel tenu à jour, y compris les salariés sortis"
+      ],
+      "pourQuiKicker": "Pour qui",
+      "pourQuiTitre": "Trois situations",
+      "pourQui": [
+        {
+          "titre": "L'entreprise qui embauche",
+          "detail": "Vous passez de un à plusieurs salariés et la paie cesse de tenir sur un tableur. Le premier bulletin faux se paie au premier contrôle."
+        },
+        {
+          "titre": "Celle qui a des variables tous les mois",
+          "detail": "Heures supplémentaires, primes de rendement, absences. C'est là que le travail est, et c'est là qu'on se trompe."
+        },
+        {
+          "titre": "Celle qui reprend en cours d'année",
+          "detail": "Les cumuls des mois déjà payés doivent être rechargés, sans quoi la déclaration annuelle sera fausse. Cette reprise se chiffre à part."
+        }
+      ],
+      "deroulementKicker": "Comment ça se passe",
+      "deroulementTitre": "Du premier entretien au premier bulletin",
+      "deroulement": [
+        {
+          "titre": "Nous faisons le point",
+          "detail": "Effectif, numéro employeur CNPS, groupe de risque notifié, avantages en nature, éléments variables. Sept questions, et le prix en découle."
+        },
+        {
+          "titre": "Vous recevez une proposition chiffrée",
+          "detail": "Un montant mensuel, écrit, avec le barème et la date qui l'ont produit. Vous l'acceptez en ligne."
+        },
+        {
+          "titre": "Nous saisissons vos contrats",
+          "detail": "Un contrat par salarié, avec sa date de début, son salaire de base et ses avantages. C'est lui qui fait la paie, et un contrat qui change ne réécrit pas les mois passés."
+        },
+        {
+          "titre": "Chaque mois, vous recevez vos bulletins",
+          "detail": "Et la déclaration des personnels employés, prête à déposer. Vous gardez le geste du dépôt et du paiement."
+        }
+      ],
+      "tarifKicker": "Combien",
+      "tarifTitre": "À partir de 60 000 FCFA par mois",
+      "tarifDetail": "Le montant dépend de votre effectif : un bulletin se produit, se contrôle et s'explique un par un. Il dépend aussi des avantages en nature et des éléments variables d'un mois sur l'autre, qui font l'essentiel du travail.",
+      "tarifAppel": "Le chiffrage se fait sur les réponses que vous donnez, et le montant retenu reste écrit avec le barème et la date qui l'ont produit. Six mois plus tard, il se réexplique."
+    },
     "juridique": {
       "kicker": "Assistance juridique",
       "titre": "Le droit des sociétés, appliqué à votre dossier",

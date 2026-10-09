@@ -12,7 +12,7 @@ import {
 } from "@/app/lib/souscription";
 
 export const metadata: Metadata = {
-  title: "Suivi de votre souscription — CGA Broad Range",
+  title: "Suivi de votre souscription",
   robots: { index: false, follow: false },
 };
 export const dynamic = "force-dynamic";

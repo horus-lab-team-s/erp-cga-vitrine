@@ -98,6 +98,11 @@ const cotéServeur = () => false;
 export function BandeauAnnonce({ annonce }: { annonce: Annonce | null }) {
   const chemin = usePathname();
   if (!annonce) return null;
+  // ⚠️ PAS SUR LA PROFORMA. Le client y lit un prix arrêté pour lui après l'échange ;
+  // un prix d'appel posé par-dessus (« votre SARL pour 275 000 FCFA ») le ferait
+  // douter du montant qu'il s'apprête à accepter, au moment exact où il s'engage.
+  // Ni sur le devis, pour la même raison : il porte le prix de CE client.
+  if (chemin.startsWith("/proforma/") || chemin.startsWith("/souscrire/devis/")) return null;
   return <Bandeau key={chemin} annonce={annonce} />;
 }
 

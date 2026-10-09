@@ -31,7 +31,20 @@ import { appeler, ErreurApi } from "./api";
 export type NatureService = "ABONNEMENT" | "ANNUEL" | "PONCTUEL" | "SUR_ETUDE";
 export type Periodicite = "MENSUELLE" | "ANNUELLE" | "UNIQUE";
 
-export type Tarif = { montant: string | null; du: string; au: string | null; motif: string | null };
+/**
+ * ⚠️ `statut` : `A_VALIDER` tant que le gérant du cabinet n'a pas arrêté ce prix,
+ * `FIXE` ensuite. Le prix est une décision humaine : un tarif à valider s'affiche
+ * comme indicatif et ne se paie pas en ligne — le backend refuse le paiement.
+ */
+export type StatutTarif = "A_VALIDER" | "FIXE";
+
+export type Tarif = {
+  montant: string | null;
+  du: string;
+  au: string | null;
+  motif: string | null;
+  statut: StatutTarif;
+};
 
 export type Formule = {
   code: string;
@@ -91,6 +104,12 @@ export type Devis = {
   souscription: string | null;
   montant_total: string;
   complet: boolean;
+  /**
+   * ⚠️ Chaque prix du devis a-t-il été arrêté par le gérant ? Recopié par le backend
+   * avec le montant : un devis établi sur un prix indicatif le reste. La vitrine et
+   * l'application LISENT ce champ, elles ne recopient pas la règle.
+   */
+  prix_arretes: boolean;
   abonnement_mensuel: string;
   montant_a_regler: string;
 };

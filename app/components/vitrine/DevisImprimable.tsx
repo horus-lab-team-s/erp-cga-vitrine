@@ -212,7 +212,7 @@ export function DevisImprimable({
               à régler une fois, sans quoi le montant du haut serait faux. */}
           {suivi && (
             <p className="devis__option">
-              {t("suiviComptable")} — <strong className="tabulaire">
+              {t("suiviComptable")} : <strong className="tabulaire">
                 {montantFcfa(suiviMensuel)}
               </strong>{" "}
               {t("parMois")}. {t("devisSuiviNote")}

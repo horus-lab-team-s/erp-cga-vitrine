@@ -25,28 +25,44 @@ export function AcceptationProforma({
 }) {
   const [etat, accepter, enCours] = useActionState(accepterLaProforma, ETAT_ACTE_INITIAL);
   if (etat.fait) {
-    return <p role="status" style={{ color: "var(--success, #1d6b50)", fontWeight: 600 }}>{etat.fait}</p>;
+    return (
+      <p role="status" className="proforma__etat proforma__etat--succes">
+        {etat.fait}
+      </p>
+    );
   }
   return (
-    <form action={accepter} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 520 }}>
+    <form action={accepter} className="proforma__formulaire">
       <input type="hidden" name="numero" value={numero} />
       <input type="hidden" name="version" value={version} />
       <input type="hidden" name="expire_le" value={expireLe} />
       <input type="hidden" name="sceau" value={sceau} />
-      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontWeight: 600 }}>
+      <label className="proforma__champ">
         Votre nom et votre qualité
-        <input name="identite_declaree" required minLength={2} maxLength={120} placeholder="Ex. : Jean Mbida, gérant" style={{ padding: "8px 10px", fontSize: 15 }} />
+        <input
+          name="identite_declaree"
+          required
+          minLength={2}
+          maxLength={120}
+          autoComplete="name"
+          placeholder="Ex. : Jean Mbida, gérant"
+        />
       </label>
-      <label style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+      <label className="proforma__case">
         <input type="checkbox" name="engagement" value="oui" required />
         <span>J&rsquo;accepte cette proposition au montant indiqué ; mon accord engage l&rsquo;entreprise que je représente.</span>
       </label>
-      <div>
-        <button type="submit" className="bouton bouton--primaire" disabled={enCours}>
-          {enCours ? "…" : "J’accepte la proposition"}
-        </button>
-      </div>
-      {etat.echec && <p role="alert" style={{ color: "#94302a" }}>{etat.echec}</p>}
+      {/* ⚠️ `bouton--principal`, la classe qui existe. `bouton--primaire`, écrite ici au
+          premier jet, n'est définie nulle part : le geste qui engage le client
+          s'affichait en texte nu, sans fond ni bord. */}
+      <button type="submit" className="bouton bouton--principal proforma__valider" disabled={enCours}>
+        {enCours ? "Enregistrement…" : "J’accepte la proposition"}
+      </button>
+      {etat.echec && (
+        <p role="alert" className="proforma__etat proforma__etat--erreur">
+          {etat.echec}
+        </p>
+      )}
     </form>
   );
 }

@@ -54,6 +54,17 @@ export const SERVICES_VITRINE: ServiceVitrine[] = [
     accent: false,
   },
   {
+    // Le premier des services connexes à exister vraiment de bout en bout :
+    // code au catalogue, questionnaire, barème. Voir `tests/test_paie_au_catalogue.py`
+    // au dépôt du serveur, qui interdit qu'une de ces trois pièces disparaisse.
+    cle: "paie",
+    href: "/services/paie",
+    icone: "paie",
+    // ⚠️ Faute d'une photographie propre à la paie. Voir la note de `FICHES_SERVICE`.
+    image: "/images/pages/cabinet-b.jpg",
+    accent: false,
+  },
+  {
     cle: "formations",
     href: "/formations",
     icone: "formations",
@@ -99,24 +110,52 @@ export const FICHES_SERVICE = [
   {
     slug: "prestations-ponctuelles",
     cle: "ponctuel",
+    demarche: "PONCTUEL",
     icone: "ponctuel",
     images: ["/images/services/prestations-ponctuelles.jpg", "/images/pages/contact-a.jpg"],
   },
   {
     slug: "domiciliation",
     cle: "domiciliation",
+    demarche: "DOMICILIATION",
     icone: "domiciliation",
     images: ["/images/services/domiciliation.jpg", "/images/agences/douala.jpg"],
   },
   {
+    slug: "paie",
+    cle: "paie",
+    demarche: "PAIE",
+    icone: "paie",
+    // ⚠️ AUCUNE PHOTOGRAPHIE PROPRE À LA PAIE N'EXISTE SUR LE DISQUE.
+    // Deux fiches sur quatre réemploient déjà une image de page faute de mieux.
+    // Le cabinet doit fournir la sienne ; d'ici là, celles-ci ne racontent rien
+    // de faux, elles ne racontent simplement rien de particulier.
+    images: ["/images/pages/cabinet-b.jpg", "/images/heros/reunion-equipe.jpg"],
+  },
+  {
     slug: "assistance-juridique",
     cle: "juridique",
+    // ⚠️ `PONCTUEL` ET NON UN CODE « JURIDIQUE », QUI N'EXISTE PAS.
+    //
+    // Le site annonce une assistance juridique ; le catalogue du cabinet n'a pas
+    // de code pour elle, et la porte d'acquisition refuse — à juste titre — tout
+    // code qu'elle ne connaît pas : un dossier né d'un code inconnu n'a ni
+    // questionnaire, ni chiffrage, ni proforma.
+    //
+    // `PONCTUEL` est la famille à laquelle ces missions appartiennent déjà au
+    // catalogue : « une mission délimitée, chiffrée après examen ». Le titre
+    // exact demandé par le visiteur part dans le message, donc le cabinet sait
+    // de quoi il s'agit. Le jour où le cabinet créera un code dédié, seule cette
+    // ligne change.
+    demarche: "PONCTUEL",
     icone: "juridique",
     images: ["/images/services/juridique.jpg", "/images/pages/cabinet-a.jpg"],
   },
   {
     slug: "conseil-et-audit",
     cle: "conseil",
+    // Même raison que l'assistance juridique, ci-dessus.
+    demarche: "PONCTUEL",
     icone: "conseil",
     images: ["/images/services/conseil.jpg", "/images/heros/reunion-equipe.jpg"],
   },

@@ -110,7 +110,7 @@ export function Estimateur() {
    * ouvrir.
    */
   const devis = [
-    `${t("votreEstimation")} — ${commun("cabinet.nomCourt")}`,
+    `${t("votreEstimation")} · ${commun("cabinet.nomCourt")}`,
     `${t("q1")} ${t(`formes.${forme.code}`)}`,
     capitalApplicable ? `${t("q2")} : ${montantFcfa(capitalRetenu)}` : null,
     associesApplicable ? `${t("q3")} : ${associesRetenu}` : null,

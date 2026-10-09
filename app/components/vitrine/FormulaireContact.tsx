@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
-import { DEMARCHES, type ResultatDemande } from "@/app/lib/acquisition";
+import { DEMARCHES, cleDeLaDemarche, type ResultatDemande } from "@/app/lib/acquisition";
 import { deposerUneDemande } from "@/app/lib/actions-acquisition";
 
 import { IconeVitrine } from "./IconeVitrine";
@@ -62,7 +62,7 @@ export function FormulaireContact() {
 
   const numero = commun("cabinet.whatsapp").replace(/\D/g, "");
   const corps = [
-    `${t("votreDemande")} : ${form(`demarches.${demande}`)}`,
+    `${t("votreDemande")} : ${form(cleDeLaDemarche(demande))}`,
     `${t("champNom")} : ${nom.trim()}`,
     `${t("champTel")} : ${chiffres}`,
     courriel.trim() ? `${t("champMail")} : ${courriel.trim()}` : null,
@@ -108,7 +108,11 @@ export function FormulaireContact() {
         >
           {DEMANDES.map((cle) => (
             <option key={cle} value={cle}>
-              {form(`demarches.${cle}`)}
+              {/* ⚠️ La VALEUR est le code du catalogue — c'est un contrat avec
+                  le serveur. Le LIBELLÉ vient des traductions, dont les clés
+                  sont en minuscules parce qu'elles appartiennent au texte du
+                  site. Les deux ne se confondent pas. */}
+              {form(cleDeLaDemarche(cle))}
             </option>
           ))}
         </select>

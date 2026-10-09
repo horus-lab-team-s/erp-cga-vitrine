@@ -99,13 +99,13 @@ async function lire<T>(chemin: string): Promise<Lecture<T>> {
     // mensonge tranquille.
     if (!reponse.ok) {
       console.warn(
-        `[vitrine] le serveur a répondu ${reponse.status} sur ${chemin} — passage au secours`,
+        `[vitrine] le serveur a répondu ${reponse.status} sur ${chemin} : passage au secours`,
       );
       return { repondu: false };
     }
     return { repondu: true, valeur: (await reponse.json()) as T };
   } catch (erreur) {
-    console.warn(`[vitrine] serveur injoignable sur ${chemin} — passage au secours`, erreur);
+    console.warn(`[vitrine] serveur injoignable sur ${chemin} : passage au secours`, erreur);
     return { repondu: false };
   }
 }

@@ -133,7 +133,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Second changement, tout aussi utile : tant que le capital reste inférieur à 1 000 000 FCFA — donc jusqu'à 999 999 FCFA — les statuts peuvent être établis sous seing privé, sans passer par un notaire. L'économie porte sur les honoraires et, tout autant, sur les délais.",
+          "Second changement, tout aussi utile : tant que le capital reste inférieur à 1 000 000 FCFA (donc jusqu'à 999 999 FCFA), les statuts peuvent être établis sous seing privé, sans passer par un notaire. L'économie porte sur les honoraires et, tout autant, sur les délais.",
       },
       {
         type: "encadre",
@@ -168,7 +168,7 @@ export const ARTICLES: Article[] = [
     rubrique: "saviezVous",
     titre: "Le titre de patente n'existe plus : place à l'attestation de non-redevance",
     accroche:
-      "Cherchez-vous encore un titre de patente à afficher dans votre boutique ? Il a été supprimé — mais la patente, elle, se paie toujours.",
+      "Cherchez-vous encore un titre de patente à afficher dans votre boutique ? Il a été supprimé, mais la patente, elle, se paie toujours.",
     resume:
       "La loi de finances 2017 a supprimé le titre de patente et son affichage obligatoire. La patente reste calculée et payée comme tout impôt, et c'est l'attestation de non-redevance, à renouveler tous les trois mois, qui la remplace au mur.",
     date: "2018-02-06",
@@ -250,7 +250,7 @@ export const ARTICLES: Article[] = [
       {
         type: "liste",
         points: [
-          "À la création, la forme juridique se choisit sur des critères de gouvernance et de responsabilité — nombre d'associés, entrée d'investisseurs, transmission — et non sur une supposée économie d'impôt.",
+          "À la création, la forme juridique se choisit sur des critères de gouvernance et de responsabilité (nombre d'associés, entrée d'investisseurs, transmission), et non sur une supposée économie d'impôt.",
           "En cours de vie, un franchissement de seuil de chiffre d'affaires fait basculer de régime. Les obligations déclaratives changent avec lui, et c'est en général là que naissent les retards.",
         ],
       },
@@ -329,7 +329,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "La DSF — Déclaration Statistique et Fiscale — est le document que toute entreprise dépose chaque année pour montrer ce qu'elle a gagné, ce qu'elle a dépensé et ce qu'elle a payé comme impôts. C'est la photographie annuelle de l'entreprise, et c'est sur elle que l'administration travaille.",
+          "La DSF (Déclaration Statistique et Fiscale) est le document que toute entreprise dépose chaque année pour montrer ce qu'elle a gagné, ce qu'elle a dépensé et ce qu'elle a payé comme impôts. C'est la photographie annuelle de l'entreprise, et c'est sur elle que l'administration travaille.",
       },
       {
         type: "paragraphe",
@@ -343,7 +343,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "On commence par réunir les factures de ventes et d'achats, les relevés bancaires, et le détail des dépenses — loyer, salaires, eau, électricité. Sans documents, il n'y a pas de bonne DSF : il n'y a qu'une déclaration approximative, et une approximation se paie au contrôle.",
+          "On commence par réunir les factures de ventes et d'achats, les relevés bancaires, et le détail des dépenses : loyer, salaires, eau, électricité. Sans documents, il n'y a pas de bonne DSF : il n'y a qu'une déclaration approximative, et une approximation se paie au contrôle.",
       },
       {
         type: "intertitre",
@@ -352,7 +352,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Toutes les entrées et sorties d'argent sont enregistrées selon les règles comptables. C'est cet enregistrement qui permet de savoir si l'entreprise a fait un bénéfice ou une perte — et non l'état du compte bancaire en fin d'année.",
+          "Toutes les entrées et sorties d'argent sont enregistrées selon les règles comptables. C'est cet enregistrement qui permet de savoir si l'entreprise a fait un bénéfice ou une perte, et non l'état du compte bancaire en fin d'année.",
       },
       {
         type: "intertitre",
@@ -403,7 +403,7 @@ export const ARTICLES: Article[] = [
   {
     slug: "pas-de-clients-pas-d-obligations-fiscales",
     rubrique: "vraiOuFaux",
-    titre: "« Pas encore de clients, donc pas d'obligations fiscales » — vrai ou faux ?",
+    titre: "« Pas encore de clients, donc pas d'obligations fiscales » : vrai ou faux ?",
     accroche:
       "Votre entreprise n'a encore rien encaissé. Croyez-vous qu'elle n'a rien à déclarer ? C'est l'erreur qui coûte le plus cher la première année.",
     resume:
@@ -417,13 +417,13 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "L'affirmation revient à chaque démarrage, et elle paraît de bon sens : pas de chiffre d'affaires, donc pas d'impôt, donc rien à faire. La première moitié est vraie, la seconde est fausse — et c'est là que se perdent beaucoup de jeunes entreprises.",
+          "L'affirmation revient à chaque démarrage, et elle paraît de bon sens : pas de chiffre d'affaires, donc pas d'impôt, donc rien à faire. La première moitié est vraie, la seconde est fausse, et c'est là que se perdent beaucoup de jeunes entreprises.",
       },
       {
         type: "encadre",
         titre: "Faux",
         texte:
-          "L'obligation ne naît pas de la recette : elle naît de l'immatriculation. Dès que votre entreprise existe au registre du commerce et au fichier des contribuables, elle doit déclarer — même pour dire qu'elle n'a rien encaissé.",
+          "L'obligation ne naît pas de la recette : elle naît de l'immatriculation. Dès que votre entreprise existe au registre du commerce et au fichier des contribuables, elle doit déclarer, même pour dire qu'elle n'a rien encaissé.",
       },
       {
         type: "intertitre",
@@ -440,7 +440,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Autrement dit : une entreprise sans activité qui déclare ne paie rien. Une entreprise sans activité qui ne déclare pas finit par payer — des pénalités, pour un chiffre d'affaires inexistant. C'est l'impôt le plus absurde qui soit, et le plus facile à éviter.",
+          "Autrement dit : une entreprise sans activité qui déclare ne paie rien. Une entreprise sans activité qui ne déclare pas finit par payer : des pénalités, pour un chiffre d'affaires inexistant. C'est l'impôt le plus absurde qui soit, et le plus facile à éviter.",
       },
       {
         type: "intertitre",
@@ -481,7 +481,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "L'Impôt Général Synthétique est un régime d'imposition simplifié, appliqué à certaines petites entreprises et aux activités génératrices de revenus. Simplifié veut dire qu'il remplace plusieurs impositions par une seule, calculée selon un barème — et non qu'il serait facultatif.",
+          "L'Impôt Général Synthétique est un régime d'imposition simplifié, appliqué à certaines petites entreprises et aux activités génératrices de revenus. Simplifié veut dire qu'il remplace plusieurs impositions par une seule, calculée selon un barème, et non qu'il serait facultatif.",
       },
       {
         type: "encadre",
@@ -508,12 +508,12 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Ne pas savoir qu'on relève de l'IGS ne suspend pas l'impôt : cela accumule un arriéré, auquel s'ajoutent les pénalités de retard. Le rattrapage se fait en bloc, souvent au pire moment — lors d'un contrôle, ou quand on a besoin d'une attestation de non-redevance pour un marché.",
+          "Ne pas savoir qu'on relève de l'IGS ne suspend pas l'impôt : cela accumule un arriéré, auquel s'ajoutent les pénalités de retard. Le rattrapage se fait en bloc, souvent au pire moment : lors d'un contrôle, ou quand on a besoin d'une attestation de non-redevance pour un marché.",
       },
       {
         type: "paragraphe",
         texte:
-          "Adhérer à un centre de gestion agréé, c'est faire vérifier chaque année le régime dont vous relevez réellement, et payer ce que vous devez — ni plus, ni plus tard.",
+          "Adhérer à un centre de gestion agréé, c'est faire vérifier chaque année le régime dont vous relevez réellement, et payer ce que vous devez, ni plus, ni plus tard.",
       },
     ],
     appel: { texte: "Vérifier mon régime d'imposition", href: "/contact" },
@@ -613,7 +613,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "La Déclaration Statistique et Fiscale n'est pas un document qu'on fabrique la veille de l'échéance : c'est la mise en forme de tout ce qui précède. Le délai dont vous disposez pour la déposer sans pénalité dépend de votre régime — vérifiez le vôtre dès janvier, et non en découvrant la pénalité.",
+          "La Déclaration Statistique et Fiscale n'est pas un document qu'on fabrique la veille de l'échéance : c'est la mise en forme de tout ce qui précède. Le délai dont vous disposez pour la déposer sans pénalité dépend de votre régime. Vérifiez le vôtre dès janvier, et non en découvrant la pénalité.",
       },
       {
         type: "encadre",
@@ -630,7 +630,7 @@ export const ARTICLES: Article[] = [
     rubrique: "lundiComptable",
     titre: "Dossier propre, décision rapide : ce que votre banquier lit vraiment",
     accroche:
-      "Une comptabilité bien tenue est souvent la clé d'un prêt bancaire accordé. Ce n'est pas votre projet que la banque examine en premier — ce sont vos comptes.",
+      "Une comptabilité bien tenue est souvent la clé d'un prêt bancaire accordé. Ce n'est pas votre projet que la banque examine en premier : ce sont vos comptes.",
     resume:
       "Ce qui fait accepter ou refuser un dossier de financement tient rarement à l'idée. Il tient à la qualité des états financiers présentés, et à ce qu'ils disent de la maîtrise du dirigeant.",
     date: "2025-08-11",
@@ -642,7 +642,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Un chef d'entreprise prépare longuement son projet, ses devis, son marché — et présente à la banque une comptabilité rassemblée en trois jours. Le dossier est refusé, et il en conclut que son projet n'a pas convaincu. Ce n'est presque jamais le cas.",
+          "Un chef d'entreprise prépare longuement son projet, ses devis, son marché, et présente à la banque une comptabilité rassemblée en trois jours. Le dossier est refusé, et il en conclut que son projet n'a pas convaincu. Ce n'est presque jamais le cas.",
       },
       {
         type: "intertitre",
@@ -666,7 +666,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Une comptabilité tenue en continu n'est pas une contrainte administrative : c'est ce qui rend votre entreprise finançable. Le jour où l'occasion se présente — un marché, un local, une machine — le dossier est déjà prêt.",
+          "Une comptabilité tenue en continu n'est pas une contrainte administrative : c'est ce qui rend votre entreprise finançable. Le jour où l'occasion se présente (un marché, un local, une machine), le dossier est déjà prêt.",
       },
     ],
     appel: { texte: "Faire tenir ma comptabilité", href: "/devenir-adherent" },
@@ -759,7 +759,7 @@ export const ARTICLES: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Le statut se choisit souvent par imitation — « mon voisin a fait une SARL » — ou par recherche du moins cher. Or il détermine la responsabilité, la fiscalité, l'entrée éventuelle d'associés et la transmission. En changer plus tard est possible, mais coûteux.",
+          "Le statut se choisit souvent par imitation (« mon voisin a fait une SARL ») ou par recherche du moins cher. Or il détermine la responsabilité, la fiscalité, l'entrée éventuelle d'associés et la transmission. En changer plus tard est possible, mais coûteux.",
       },
       {
         type: "intertitre",
@@ -803,7 +803,7 @@ export const ARTICLES: Article[] = [
     rubrique: "annonces",
     titre: "Pack formalisation SARL : votre société créée pour 275 000 FCFA",
     accroche:
-      "Votre SARL immatriculée, vos statuts rédigés, votre numéro de contribuable obtenu — pour 275 000 FCFA, tout compris.",
+      "Votre SARL immatriculée, vos statuts rédigés, votre numéro de contribuable obtenu, pour 275 000 FCFA, tout compris.",
     resume:
       "Le pack formalisation SARL couvre l'intégralité du dossier de création et les documents qui vous sont remis à l'issue : statuts, RCCM, attestations et numéros CNPS.",
     date: "2025-04-08",

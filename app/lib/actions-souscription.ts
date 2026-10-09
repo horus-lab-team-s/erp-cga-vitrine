@@ -55,7 +55,8 @@ export async function etablirUnDevis(_precedent: EtatActe, donnees: FormData): P
     telephone: texte(donnees, "telephone"),
     // `null` et non "" : une chaîne vide serait un NIU déclaré, et faux.
     denomination: texte(donnees, "denomination") || null,
-    niu: texte(donnees, "niu").toUpperCase() || null,
+    // Sans espaces : « M081 2345 6789 0P » se tape ainsi, mais le NIU n'en a pas.
+    niu: texte(donnees, "niu").toUpperCase().replace(/\s+/g, "") || null,
     // Chiffres seulement : « 28 000 000 » saisi avec des espaces reste lisible.
     chiffre_affaires_declare: texte(donnees, "chiffre_affaires").replace(/\s/g, "") || null,
   };
@@ -90,6 +91,28 @@ export async function sEngagerSurLeDevis(_precedent: EtatEngagement, donnees: Fo
     return { echec: null, message: r.message, souscription: r.souscription.reference };
   } catch (erreur) {
     if (erreur instanceof ErreurApi) return { echec: erreur.message, message: null, souscription: null };
+    throw erreur;
+  }
+}
+
+/**
+ * Le prospect demande au cabinet d'arrêter le prix de son devis.
+ *
+ * ⚠️ Seule la RÉFÉRENCE part : le serveur reprend le nom, le numéro et le courriel du
+ * devis lui-même. Renvoyer ces champs depuis la page permettrait de déposer une
+ * demande au nom de quelqu'un d'autre sous la référence d'un devis.
+ */
+export async function demanderLeRappelDuDevis(_precedent: EtatActe, donnees: FormData): Promise<EtatActe> {
+  const reference = texte(donnees, "reference");
+  if (!reference) return { echec: "Devis non désigné.", fait: null };
+  try {
+    const r = await appeler<{ message: string }>(`/acquisition/devis/${encodeURIComponent(reference)}/rappel`, {
+      methode: "POST",
+      corps: {},
+    });
+    return { echec: null, fait: r.message };
+  } catch (erreur) {
+    if (erreur instanceof ErreurApi) return { echec: erreur.message, fait: null };
     throw erreur;
   }
 }

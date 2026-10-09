@@ -133,7 +133,8 @@ function Demande({
     <section className="section section--centre">
       <div className="bloc bloc--etroit">
         <FormulaireService
-          sujetInitial={sujetPrecise ? `${t("titre")} — ${sujetPrecise}` : t("titre")}
+          sujetInitial={sujetPrecise ? `${t("titre")} · ${sujetPrecise}` : t("titre")}
+          demarche="CREATION"
           numeroWhatsapp={commun("cabinet.whatsapp").replace(/\D/g, "")}
           /* La forme n'entre pas dans le sujet : elle a son propre champ, et
              l'écrire aux deux endroits ferait diverger les deux le jour où le

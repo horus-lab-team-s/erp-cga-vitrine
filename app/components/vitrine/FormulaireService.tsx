@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { deposerUneDemande } from "@/app/lib/actions-acquisition";
+import type { Demarche, ResultatDemande } from "@/app/lib/acquisition";
+
 import { IconeVitrine } from "./IconeVitrine";
 
 /**
@@ -42,8 +45,10 @@ import { IconeVitrine } from "./IconeVitrine";
  * Le bouton WhatsApp est là pour la même raison, et il est même le plus utilisé
  * : une part importante de la clientèle n'ouvre jamais de courriel.
  *
- * Le jour où `POST /vitrine/demandes` existera, seule la fonction `envoyer`
- * change. Le balisage, les champs et les messages restent.
+ * ⚠️ Ce jour est arrivé le 6 octobre 2026. La note disait « le jour où
+ * `POST /vitrine/demandes` existera, seule la fonction `envoyer` change » : la
+ * porte existait depuis longtemps sous le nom `POST /acquisition/demandes`, et
+ * personne n'avait rebranché ce formulaire dessus. Voir la propriété `demarche`.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -52,12 +57,38 @@ const DESTINATAIRE = "contact@cga-brcgroup.com";
 
 export function FormulaireService({
   sujetInitial,
+  demarche,
   numeroWhatsapp,
   formes,
   formeInitiale,
 }: {
   /** Le service, la session ou la formule dont on part. Modifiable ensuite. */
   sujetInitial: string;
+  /**
+   * Le **code du catalogue** sous lequel la demande entre dans le système.
+   *
+   * ───────────────────────────────────────────────────────────────────────────
+   * ⚠️ SANS LUI, LA DEMANDE N'EXISTE QUE DANS UNE BOÎTE AUX LETTRES.
+   *
+   * Ce formulaire n'ouvrait qu'un courriel. Mesuré le 6 octobre 2026 : **une
+   * seule page du site déposait réellement une demande**, la page Contact. Les
+   * fiches de service, « Créer mon entreprise » et « Devenir adhérent » — les
+   * deux parcours phares — s'arrêtaient au brouillon de message.
+   *
+   * Un prospect qui envoie ce courriel n'apparaît donc nulle part : ni dans les
+   * demandes entrantes, ni dans l'affectation automatique, ni dans la veille des
+   * dossiers en souffrance. Il existe tant que quelqu'un se souvient de lui.
+   *
+   * ⚠️ Le code est celui du CATALOGUE, pas le titre de la fiche. La porte
+   * d'acquisition refuse tout ce qu'elle ne connaît pas, et elle a raison : un
+   * dossier né d'un code inconnu n'a ni questionnaire, ni chiffrage, ni proforma.
+   *
+   * ⚠️ Le courriel et WhatsApp RESTENT. L'enregistrement part en parallèle, sans
+   * rien retirer au client : beaucoup écrivent depuis leur téléphone, et leur
+   * fermer ce canal pour gagner une ligne en base serait le perdre.
+   * ───────────────────────────────────────────────────────────────────────────
+   */
+  demarche: Demarche;
   /** Numéro du cabinet, chiffres seuls. */
   numeroWhatsapp: string;
   /**
@@ -89,6 +120,7 @@ export function FormulaireService({
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
   const [envoye, setEnvoye] = useState(false);
+  const [resultat, setResultat] = useState<ResultatDemande | "en-cours" | null>(null);
 
   /** Le corps du message, identique par courriel et par WhatsApp. */
   function corps() {
@@ -105,8 +137,38 @@ export function FormulaireService({
       .join("\n");
   }
 
+  /**
+   * Dépose la demande au cabinet, sans jamais bloquer le canal choisi.
+   *
+   * ⚠️ Un échec d'enregistrement ne doit **pas** empêcher le courriel ou le
+   * message WhatsApp de partir. Le client a fait son geste ; lui refuser l'envoi
+   * parce que notre API n'a pas répondu serait lui faire payer notre panne.
+   * L'écran dit ce qui s'est passé, et le cabinet reçoit le message de toute
+   * façon.
+   */
+  function enregistrer() {
+    if (resultat === "en-cours") return;
+    setResultat("en-cours");
+    deposerUneDemande({
+      demarche,
+      nom,
+      telephone,
+      courriel,
+      // Le sujet est repris dans le message : c'est lui qui dit ce que le
+      // visiteur a demandé, là où le code du catalogue dit seulement la famille.
+      message: [sujet, forme ? nomsFormes(forme) : null, message]
+        .filter(Boolean)
+        .join("\n"),
+      consentementContact: consent,
+      origine: `vitrine-${demarche.toLowerCase()}`,
+    }).then(setResultat, () =>
+      setResultat({ enregistree: false, motif: t("enregistrement.indisponible") }),
+    );
+  }
+
   function envoyer(evenement: React.FormEvent<HTMLFormElement>) {
     evenement.preventDefault();
+    enregistrer();
     const objet = encodeURIComponent(t("objet", { sujet }));
     window.location.href = `mailto:${DESTINATAIRE}?subject=${objet}&body=${encodeURIComponent(corps())}`;
     setEnvoye(true);
@@ -256,7 +318,14 @@ export function FormulaireService({
              doit valoir quel que soit le canal. */
           aria-disabled={!consent}
           onClick={(e) => {
-            if (!consent) e.preventDefault();
+            if (!consent) {
+              e.preventDefault();
+              return;
+            }
+            // ⚠️ Pas de `preventDefault` : WhatsApp s'ouvre sur le geste même,
+            // et l'enregistrement part en parallèle. Même règle qu'à la page
+            // Contact.
+            enregistrer();
           }}
         >
           <IconeVitrine nom="whatsapp" taille={16} />
@@ -268,6 +337,30 @@ export function FormulaireService({
       <p className="formulaire-service__confirmation" role="status">
         {envoye ? t("confirmation") : ""}
       </p>
+
+      {/* ⚠️ DEUX CHOSES DISTINCTES, DEUX LIGNES DISTINCTES.
+          Au-dessus : le canal est parti, courriel ou WhatsApp. Ici : la demande
+          est-elle entrée chez le cabinet. Les confondre ferait croire au visiteur
+          que tout va bien alors que seul son courriel est parti, et il attendrait
+          un rappel que personne n'a programmé. */}
+      {resultat !== null && (
+        <p
+          role="status"
+          className="formulaire-service__confirmation"
+          style={{
+            color:
+              resultat !== "en-cours" && !resultat.enregistree
+                ? "var(--danger)"
+                : undefined,
+          }}
+        >
+          {resultat === "en-cours"
+            ? t("enregistrement.enCours")
+            : resultat.enregistree
+              ? t("enregistrement.reussi")
+              : t("enregistrement.echec", { motif: resultat.motif })}
+        </p>
+      )}
     </form>
   );
 }

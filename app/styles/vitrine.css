@@ -4200,3 +4200,291 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+
+/* ══ La proforma du client, et son devis ══════════════════════════════════════
+   La page ouverte depuis le courriel ou le message WhatsApp du cabinet, le plus
+   souvent sur un téléphone. Le devis établi en ligne emploie les mêmes classes :
+   même lecteur, même écran, même en-tête à dégager. Deux cartes : ce que le client accepte, puis son
+   accord. Les angles suivent les jetons (`--rayon`), comme le reste du site. */
+/* ⚠️ L'EN-TÊTE DU SITE EST FIXE, ET CONÇU POUR FLOTTER SUR DE L'INDIGO.
+   Toutes les pages intérieures ouvrent sur une bannière indigo (`.entete-page`) ;
+   sur un fond clair, la barre utilitaire en blanc devenait illisible, et la
+   première ligne de la carte passait sous l'en-tête. La page pose donc une bande
+   indigo derrière l'en-tête, et les cartes en chevauchent le bas.
+
+   `--entete` est la hauteur MESURÉE de l'en-tête à chaque largeur (126, 114,
+   puis 62 px sous 760 px, où la barre utilitaire disparaît). Si l'en-tête
+   change, ces trois valeurs changent avec lui. */
+.proforma {
+  --entete: 126px;
+  background: linear-gradient(
+    var(--brand-indigo-900) 0 calc(var(--entete) + 72px),
+    var(--surface-alt) calc(var(--entete) + 72px)
+  );
+}
+
+@media (max-width: 1099px) {
+  .proforma {
+    --entete: 114px;
+  }
+}
+
+@media (max-width: 760px) {
+  .proforma {
+    --entete: 62px;
+  }
+}
+
+.proforma__bloc {
+  max-width: 680px;
+  padding-top: calc(var(--entete) + 28px);
+  padding-bottom: clamp(24px, 5vw, 56px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.proforma__carte {
+  background: var(--surface);
+  border: 1px solid var(--line-200);
+  border-radius: var(--rayon);
+  padding: clamp(18px, 4vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ⚠️ Sans capitales forcées : le surtitre porte une RÉFÉRENCE (`DV-6938…`), que
+   le client peut dicter au téléphone. En capitales, elle ne correspondait plus à
+   la référence réelle, en minuscules. */
+.proforma__surtitre {
+  margin: 0;
+  font: 600 12.5px/1.4 var(--police-texte);
+  letter-spacing: 0.02em;
+  color: var(--brand-indigo-700);
+}
+
+.proforma__titre {
+  margin: 0;
+  font: 600 clamp(20px, 5vw, 26px) / 1.25 var(--police-titre);
+  color: var(--ink-900);
+}
+
+/* Le montant, insécable : il se réduit avec l'écran plutôt que de déborder. */
+.proforma__montant {
+  margin: 4px 0 0;
+  font: 700 clamp(26px, 8vw, 36px) / 1.1 var(--police-titre);
+  color: var(--brand-indigo-900);
+  overflow-wrap: anywhere;
+}
+
+.proforma__texte,
+.proforma__aide {
+  margin: 0;
+  font: 400 14px/1.6 var(--police-texte);
+  color: var(--ink-700);
+}
+
+.proforma__aide {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-500);
+}
+
+/* Le lien vers le document, centré entre la carte du prix et celle de l'accord. */
+.proforma__document {
+  margin: 0;
+  text-align: center;
+}
+
+.proforma__detail {
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-200);
+}
+
+.proforma__intertitre {
+  margin: 0 0 8px;
+  font: 600 15px/1.4 var(--police-texte);
+  color: var(--ink-900);
+}
+
+.proforma__lignes {
+  margin: 0;
+}
+
+.proforma__ligne {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 7px;
+  font: 400 14px/1.5 var(--police-texte);
+}
+
+.proforma__ligne + .proforma__ligne {
+  border-top: 1px dashed var(--line-200);
+}
+
+.proforma__ligne dt {
+  color: var(--ink-700);
+}
+
+.proforma__ligne dd {
+  margin: 0;
+  flex: none;
+  font-weight: 600;
+  color: var(--ink-900);
+}
+
+.proforma__formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.proforma__champ {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font: 600 13px/1.4 var(--police-texte);
+  color: var(--ink-900);
+}
+
+.proforma__champ input {
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--line-300);
+  border-radius: var(--rayon-petit);
+  background: var(--surface);
+  font: 400 15px/1.4 var(--police-texte);
+  color: var(--ink-900);
+}
+
+.proforma__case {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font: 400 14px/1.5 var(--police-texte);
+  color: var(--ink-700);
+}
+
+.proforma__case input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--brand-magenta-600);
+}
+
+/* Sur un téléphone, le geste qui engage prend toute la largeur : on ne le cherche pas. */
+.proforma__valider {
+  align-self: flex-start;
+  min-height: 46px;
+  font-size: 14px;
+}
+
+@media (max-width: 520px) {
+  .proforma__valider {
+    align-self: stretch;
+  }
+}
+
+.proforma__etat {
+  margin: 0;
+  font: 500 14px/1.6 var(--police-texte);
+  color: var(--ink-700);
+}
+
+.proforma__etat--succes {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.proforma__etat--erreur {
+  color: var(--danger);
+}
+
+/* ── Le suivi d'une création, ouvert par un lien signé (pas 141) ──────────────
+   ⚠️ Dessiné d'abord pour 360 px : la cliente ouvre cette page depuis le
+   courriel reçu à l'ouverture de son dossier, donc sur un téléphone, et le plus
+   souvent pour y photographier un document. */
+.suivi__liste {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.suivi__ligne {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line-200);
+  font: 400 15px/1.5 var(--police-texte);
+  color: var(--ink-900);
+}
+
+.suivi__mention {
+  display: block;
+  margin-top: 4px;
+  font: 400 13px/1.55 var(--police-texte);
+  color: var(--ink-500);
+}
+
+/* ⚠️ Le champ et le bouton sur une seule ligne dès qu'il y a la place, empilés
+   sinon : un bouton rejeté hors de l'écran sur un téléphone étroit rend le
+   dépôt impossible sans que rien ne l'explique. */
+.depot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.depot__champ {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.depot__champ input[type="file"] {
+  width: 100%;
+  font: 400 14px/1.4 var(--police-texte);
+  color: var(--ink-700);
+}
+
+/* ⚠️ Visible pour les lecteurs d'écran, absent à l'oeil : sur une liste de neuf
+   lignes, « Choisir un fichier » seul ne dit pas laquelle. */
+.depot__invisible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.depot__bouton {
+  flex: 0 0 auto;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: var(--rayon-petit);
+  background: var(--magenta-600);
+  color: #fff;
+  font: 600 14px/1 var(--police-texte);
+  cursor: pointer;
+}
+
+.depot__bouton:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.depot__echec {
+  flex: 1 1 100%;
+  font: 400 13px/1.5 var(--police-texte);
+  color: var(--danger);
+}

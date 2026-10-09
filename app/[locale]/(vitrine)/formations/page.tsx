@@ -220,7 +220,8 @@ function Demande({ sessionChoisie }: { sessionChoisie?: string }) {
     <section className="section section--teinte section--centre">
       <div className="bloc bloc--etroit">
         <FormulaireService
-          sujetInitial={sessionChoisie ? `${t("titre")} — ${sessionChoisie}` : t("titre")}
+          sujetInitial={sessionChoisie ? `${t("titre")} · ${sessionChoisie}` : t("titre")}
+          demarche="FORMATION"
           numeroWhatsapp={commun("cabinet.whatsapp").replace(/\D/g, "")}
         />
       </div>

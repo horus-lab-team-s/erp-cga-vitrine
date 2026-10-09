@@ -3,6 +3,8 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { DEMARCHES, cleDeLaDemarche } from "@/app/lib/acquisition";
+
 import { IconeVitrine } from "./IconeVitrine";
 
 /**
@@ -22,7 +24,11 @@ import { IconeVitrine } from "./IconeVitrine";
  * professionnel dominant au Cameroun, ce n'est pas un pis-aller.
  */
 
-const DEMARCHES = ["creation", "adhesion", "ponctuel", "domiciliation", "formation", "autre"] as const;
+// ⚠️ La liste vivait ici, en double de `app/lib/acquisition.ts`. Les deux ont
+// divergé : le 27 septembre, la copie de la bibliothèque est passée aux codes du
+// catalogue et celle-ci était restée en minuscules. Une seule source désormais.
+// Ce formulaire compose un message WhatsApp et ne dépose rien — mais il nomme la
+// démarche au client, et deux listes finiraient par ne plus dire la même chose.
 
 /** Indicatifs de la sous-région, le Cameroun en tête. */
 const PAYS = [
@@ -44,7 +50,7 @@ export function FormulaireDemarche({ onInteraction }: { onInteraction?: () => vo
   const t = useTranslations("vitrine.formulaire");
   const commun = useTranslations("commun");
 
-  const [demarche, setDemarche] = useState<string>("creation");
+  const [demarche, setDemarche] = useState<string>("CREATION");
   const [nom, setNom] = useState("");
   const [codePays, setCodePays] = useState("CM");
   const [telephone, setTelephone] = useState("");
@@ -58,8 +64,8 @@ export function FormulaireDemarche({ onInteraction }: { onInteraction?: () => vo
 
   const numeroCabinet = commun("cabinet.whatsapp").replace(/\D/g, "");
   const message = [
-    `${t("titre")} — ${commun("cabinet.nomCourt")}`,
-    `${t("demarche")} : ${t(`demarches.${demarche}`)}`,
+    `${t("titre")} · ${commun("cabinet.nomCourt")}`,
+    `${t("demarche")} : ${t(cleDeLaDemarche(demarche))}`,
     `${t("nom")} : ${nom.trim()}`,
     `${t("tel")} : ${pays.indicatif} ${chiffres}`,
   ].join("\n");
@@ -96,7 +102,10 @@ export function FormulaireDemarche({ onInteraction }: { onInteraction?: () => vo
         >
           {DEMARCHES.map((cle) => (
             <option key={cle} value={cle}>
-              {t(`demarches.${cle}`)}
+              {/* ⚠️ La VALEUR est le code du catalogue, le LIBELLÉ vient des
+                  traductions. Les deux ne se confondent pas : l'un est un
+                  contrat avec le serveur, l'autre du texte qu'on relit. */}
+              {t(cleDeLaDemarche(cle))}
             </option>
           ))}
         </select>
@@ -173,8 +182,11 @@ export function FormulaireDemarche({ onInteraction }: { onInteraction?: () => vo
             color: "#ffb4ad",
           }}
         >
-          {!nomValide ? `${t("nom")} — ` : ""}
-          {!telephoneValide ? `${t("tel")} — ` : ""}
+          {/* ⚠️ Une virgule, et non un tiret : c'est une énumération de champs,
+              pas une incise. Le tiret cadratin y faisait en outre entrer dans
+              un message d'erreur un signe que le cabinet ne veut nulle part. */}
+          {!nomValide ? `${t("nom")}, ` : ""}
+          {!telephoneValide ? `${t("tel")}, ` : ""}
           {commun("formulaire.champsRequis")}
         </p>
       )}

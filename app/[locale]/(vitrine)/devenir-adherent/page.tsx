@@ -237,7 +237,8 @@ function Demande({ formuleChoisie }: { formuleChoisie?: string }) {
     <section className="section section--centre">
       <div className="bloc bloc--etroit">
         <FormulaireService
-          sujetInitial={formuleChoisie ? `${t("titre")} — ${formuleChoisie}` : t("titre")}
+          sujetInitial={formuleChoisie ? `${t("titre")} · ${formuleChoisie}` : t("titre")}
+          demarche="ADHESION"
           numeroWhatsapp={commun("cabinet.whatsapp").replace(/\D/g, "")}
         />
       </div>

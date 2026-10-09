@@ -53,10 +53,10 @@
     "demarches": {
       "creation": "Company formation",
       "adhesion": "Membership and bookkeeping",
+      "paie": "Paie déléguée",
       "ponctuel": "One-off service",
       "domiciliation": "Registered address",
-      "formation": "Training",
-      "autre": "Another request"
+      "formation": "Training"
     }
   },
   "chiffres": {
@@ -104,6 +104,12 @@
       "detail": "A professional address in Douala, with mail handling and forwarding.",
       "prix": "from 180,000 FCFA per year",
       "action": "Request a quote"
+    },
+    "paie": {
+      "titre": "Paie déléguée",
+      "detail": "Bulletins de vos salariés, cotisations CNPS et déclaration mensuelle des personnels employés, chaque mois.",
+      "prix": "dès 60 000 FCFA par mois",
+      "action": "Confier ma paie"
     },
     "formations": {
       "titre": "Training",

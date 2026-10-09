@@ -53,10 +53,10 @@
     "demarches": {
       "creation": "Création d'entreprise",
       "adhesion": "Adhésion et suivi comptable",
+      "paie": "Paie déléguée",
       "ponctuel": "Prestation ponctuelle",
       "domiciliation": "Domiciliation commerciale",
-      "formation": "Formation",
-      "autre": "Autre demande"
+      "formation": "Formation"
     }
   },
   "chiffres": {
@@ -104,6 +104,12 @@
       "detail": "Une adresse professionnelle à Douala, réception et réexpédition de votre courrier.",
       "prix": "dès 180 000 FCFA par an",
       "action": "Demander un devis"
+    },
+    "paie": {
+      "titre": "Paie déléguée",
+      "detail": "Bulletins de vos salariés, cotisations CNPS et déclaration mensuelle des personnels employés, chaque mois.",
+      "prix": "dès 60 000 FCFA par mois",
+      "action": "Confier ma paie"
     },
     "formations": {
       "titre": "Formations",

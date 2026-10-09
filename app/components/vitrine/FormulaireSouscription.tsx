@@ -2,7 +2,12 @@
 
 import { useActionState, useState } from "react";
 
-import { etablirUnDevis, sEngagerSurLeDevis, type EtatEngagement } from "@/app/lib/actions-souscription";
+import {
+  demanderLeRappelDuDevis,
+  etablirUnDevis,
+  sEngagerSurLeDevis,
+  type EtatEngagement,
+} from "@/app/lib/actions-souscription";
 import { ETAT_ACTE_INITIAL } from "@/app/lib/saisie";
 import type { Service } from "@/app/lib/souscription";
 import { Link } from "@/i18n/navigation";
@@ -86,11 +91,26 @@ export function FormulaireSouscription({ services, choisi }: { services: Service
         <>
           <label style={colonne}>
             Dénomination de l&rsquo;entreprise
-            <input name="denomination" autoComplete="organization" style={champ} />
+            <input name="denomination" required autoComplete="organization" style={champ} />
           </label>
+          {/* ⚠️ OBLIGATOIRE, ET IL NE L'ÉTAIT PAS. Le backend établit le devis sans
+              NIU, puis REFUSE le paiement d'une prestation qui ouvre un dossier :
+              « le NIU de l'entreprise est nécessaire ». Le visiteur voyait son
+              prix, cliquait sur « payer », et restait bloqué. Constaté en jouant
+              le parcours contre le vrai serveur ; l'application mobile avait le
+              même défaut, corrigé le même jour. La forme seule est contrôlée :
+              c'est le cabinet qui vérifie ensuite l'identité. */}
           <label style={colonne}>
             NIU
-            <input name="niu" style={champ} />
+            <input
+              name="niu"
+              required
+              minLength={10}
+              pattern="[A-Za-z0-9 ]{10,}"
+              title="Au moins dix lettres et chiffres, tels qu'ils figurent sur votre carte de contribuable"
+              autoCapitalize="characters"
+              style={champ}
+            />
           </label>
           <label style={colonne}>
             Chiffre d&rsquo;affaires annuel (FCFA)
@@ -157,6 +177,60 @@ export function EngagementDevis({ reference, montant }: { reference: string; mon
       </div>
       {etat.echec && (
         <p role="alert" style={{ color: "#94302a", margin: 0 }}>
+          {etat.echec}
+        </p>
+      )}
+    </form>
+  );
+}
+
+/**
+ * Le devis dont un prix reste à arrêter : le prospect demande au cabinet de le faire.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ⚠️ UN BOUTON, ET NON UNE PHRASE
+ *
+ * La page disait « un responsable vous rappelle », et rien ne prévenait personne. Le
+ * bouton dépose une vraie demande dans la file du responsable ; c'est lui qui arrête
+ * le prix après l'échange, et le client reçoit ensuite sa proposition par courriel
+ * ou sur WhatsApp, avec le lien pour l'accepter.
+ *
+ * Deux appuis ne font pas deux dossiers : le serveur rattache la seconde demande au
+ * dossier déjà ouvert pour ce numéro.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+export function RappelDuDevis({
+  reference,
+  telephone,
+  motif,
+}: {
+  reference: string;
+  telephone: string;
+  /** Pourquoi le devis ne se règle pas en ligne, dit en une phrase au prospect. */
+  motif: string;
+}) {
+  const [etat, demander, enCours] = useActionState(demanderLeRappelDuDevis, ETAT_ACTE_INITIAL);
+  if (etat.fait) {
+    return (
+      <p role="status" style={{ margin: 0, fontWeight: 600, color: "var(--success)" }}>
+        {etat.fait}
+      </p>
+    );
+  }
+  return (
+    <form action={demander} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 560 }}>
+      <input type="hidden" name="reference" value={reference} />
+      <p style={{ margin: 0 }}>
+        {motif} Un responsable du cabinet arrête votre prix avec vous au {telephone}, puis vous envoie votre
+        proposition par courriel ou sur WhatsApp.
+      </p>
+      <div>
+        <button type="submit" className="bouton bouton--principal" disabled={enCours}>
+          {enCours ? "Envoi…" : "Faire confirmer mon prix"}
+        </button>
+      </div>
+      {etat.echec && (
+        <p role="alert" style={{ color: "var(--danger)", margin: 0 }}>
           {etat.echec}
         </p>
       )}

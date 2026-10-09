@@ -40,6 +40,9 @@ export const ICONES_VITRINE = {
   adhesion: "M5 5h14v15H5zM9 10h6M9 14h4M9 3v4M15 3v4",
   ponctuel: "M6 3h8l4 4v14H6zM14 3v4h4M9 13h6M9 17h4",
   domiciliation: "M12 21s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11zM12 10h.01",
+  // Un bulletin : la feuille, ses lignes, et la pièce en bas. Distincte de
+  // `ponctuel` et de `controle`, qui partagent déjà la feuille nue.
+  paie: "M6 3h9l3 3v15H6zM15 3v3h3M9 11h7M9 15h3M13.7 17.5a1.8 1.8 0 103.6 0 1.8 1.8 0 10-3.6 0",
   formations: "M3 8l9-4 9 4-9 4zM7 11v5c0 1 2.2 2.5 5 2.5s5-1.5 5-2.5v-5",
   conseil:
     "M16 20v-1.5A3.5 3.5 0 0012.5 15h-5A3.5 3.5 0 004 18.5V20M10 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7",

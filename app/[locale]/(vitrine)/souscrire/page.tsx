@@ -7,7 +7,7 @@ import { aujourdhui } from "@/app/lib/portefeuille";
 import { lireCatalogue, type Service, type Tarif } from "@/app/lib/souscription";
 
 export const metadata: Metadata = {
-  title: "Souscrire en ligne — CGA Broad Range",
+  title: "Souscrire en ligne",
   description: "Établir un devis au barème du jour et souscrire par Mobile Money.",
 };
 export const dynamic = "force-dynamic";
@@ -94,6 +94,9 @@ function Catalogue({ services, jour, choisi }: { services: Service[]; jour: stri
                     {p.libelle ? `${p.libelle} : ` : ""}
                     {p.tarif?.montant ? montantFcfa(p.tarif.montant) : "sur devis"}
                     {s.periodicite === "MENSUELLE" ? " par mois" : s.periodicite === "ANNUELLE" ? " par an" : ""}
+                    {/* ⚠️ Un prix que le gérant n'a pas arrêté se dit indicatif : le
+                        cabinet le confirme avant tout paiement. */}
+                    {p.tarif?.montant && p.tarif.statut !== "FIXE" ? " · indicatif" : ""}
                   </li>
                 ))}
               </ul>

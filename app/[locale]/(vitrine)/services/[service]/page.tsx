@@ -229,6 +229,7 @@ function Demande({ fiche }: { fiche: FicheService }) {
       <div className="bloc bloc--etroit">
         <FormulaireService
           sujetInitial={t("titre")}
+          demarche={fiche.demarche}
           numeroWhatsapp={commun("cabinet.whatsapp").replace(/\D/g, "")}
         />
       </div>

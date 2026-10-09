@@ -44,7 +44,7 @@ export const ANNONCES: Annonce[] = [
     cle: "pack-sarl-275-2026",
     etiquette: "Offre",
     texte:
-      "Votre SARL immatriculée, statuts et attestations compris, pour 275 000 FCFA — sans notaire et sans file d'attente.",
+      "Votre SARL immatriculée, statuts et attestations compris, pour 275 000 FCFA, sans notaire et sans file d'attente.",
     lien: "/blog/pack-formalisation-sarl",
     libelleLien: "Voir l'offre",
     du: "2026-01-01",
