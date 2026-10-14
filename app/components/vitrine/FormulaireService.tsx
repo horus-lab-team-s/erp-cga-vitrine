@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { deposerUneDemande } from "@/app/lib/actions-acquisition";
-import type { Demarche, ResultatDemande } from "@/app/lib/acquisition";
+import type { Demarche, QuestionAuVisiteur, ResultatDemande } from "@/app/lib/acquisition";
 
 import { IconeVitrine } from "./IconeVitrine";
 
@@ -61,6 +61,7 @@ export function FormulaireService({
   numeroWhatsapp,
   formes,
   formeInitiale,
+  questions = [],
 }: {
   /** Le service, la session ou la formule dont on part. Modifiable ensuite. */
   sujetInitial: string;
@@ -101,6 +102,14 @@ export function FormulaireService({
   formes?: readonly string[];
   /** Code pré-sélectionné — celui du lien d'où l'on vient. */
   formeInitiale?: string;
+  /**
+   * Les questions du projet, lues au référentiel du cabinet. Toutes facultatives.
+   *
+   * ⚠️ Quand elles portent la forme juridique, le champ `formes` ci-dessus
+   * s'efface : la même question posée deux fois sur le même écran donnerait deux
+   * réponses, et c'est exactement la double saisie que ces questions suppriment.
+   */
+  questions?: readonly QuestionAuVisiteur[];
 }) {
   const t = useTranslations("vitrine.demande");
   /* Les libellés viennent de l'estimateur : « SARL unipersonnelle », « Société
@@ -114,11 +123,31 @@ export function FormulaireService({
   const [forme, setForme] = useState(
     formeInitiale && formes?.includes(formeInitiale) ? formeInitiale : "",
   );
+  const demandeLaForme = questions.some((q) => q.code === "forme_juridique");
+  const [declarations, setDeclarations] = useState<Record<string, string>>(() => {
+    const laForme = questions.find((q) => q.code === "forme_juridique");
+    // La forme du lien d'où l'on vient, si le cabinet la propose sous ce code.
+    const depart: Record<string, string> = {};
+    if (laForme && formeInitiale && laForme.valeurs.some((v) => v.valeur === formeInitiale)) {
+      depart.forme_juridique = formeInitiale;
+    }
+    return depart;
+  });
+  const declarer = (code: string, valeur: string) =>
+    setDeclarations((avant) => ({ ...avant, [code]: valeur }));
+  /** La réponse telle que le visiteur la relira : le nom d'un choix, pas son code. */
+  const reponseLisible = (question: QuestionAuVisiteur) => {
+    const brute = (declarations[question.code] ?? "").trim();
+    if (!brute) return null;
+    if (question.type === "BOOLEEN") return brute === "oui" ? t("oui") : t("non");
+    return question.valeurs.find((v) => v.valeur === brute)?.libelle ?? brute;
+  };
   const [nom, setNom] = useState("");
   const [telephone, setTelephone] = useState("");
   const [courriel, setCourriel] = useState("");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
+  const [accordWhatsapp, setAccordWhatsapp] = useState(false);
   const [envoye, setEnvoye] = useState(false);
   const [resultat, setResultat] = useState<ResultatDemande | "en-cours" | null>(null);
 
@@ -130,7 +159,13 @@ export function FormulaireService({
       `${t("champNom")} : ${nom}`,
       `${t("champTelephone")} : ${telephone}`,
       courriel ? `${t("champCourriel")} : ${courriel}` : null,
-      forme ? `${t("champForme")} : ${nomsFormes(forme)}` : null,
+      forme && !demandeLaForme ? `${t("champForme")} : ${nomsFormes(forme)}` : null,
+      // Les réponses du projet partent aussi par courriel et par WhatsApp : un
+      // visiteur qui choisit ces canaux ne doit pas les avoir remplies pour rien.
+      ...questions.map((q) => {
+        const reponse = reponseLisible(q);
+        return reponse ? `${q.libelle} ${reponse}` : null;
+      }),
       message ? `\n${t("champMessage")} :\n${message}` : null,
     ]
       .filter((ligne) => ligne !== null)
@@ -156,10 +191,12 @@ export function FormulaireService({
       courriel,
       // Le sujet est repris dans le message : c'est lui qui dit ce que le
       // visiteur a demandé, là où le code du catalogue dit seulement la famille.
-      message: [sujet, forme ? nomsFormes(forme) : null, message]
+      message: [sujet, forme && !demandeLaForme ? nomsFormes(forme) : null, message]
         .filter(Boolean)
         .join("\n"),
+      declarations,
       consentementContact: consent,
+      consentementWhatsapp: accordWhatsapp,
       origine: `vitrine-${demarche.toLowerCase()}`,
     }).then(setResultat, () =>
       setResultat({ enregistree: false, motif: t("enregistrement.indisponible") }),
@@ -203,7 +240,7 @@ export function FormulaireService({
           frais. Une demande de création qui ne la dit pas oblige le cabinet à
           rappeler pour la poser — un aller-retour de plus, sur la démarche où
           le visiteur est déjà le plus hésitant. */}
-      {formes && formes.length > 0 && (
+      {formes && formes.length > 0 && !demandeLaForme && (
         <div>
           <label className={etiquette} htmlFor="demande-forme">
             {t("champForme")}
@@ -292,6 +329,69 @@ export function FormulaireService({
         />
       </div>
 
+      {/* ─────────────────────────────────────────────────────────────────────
+          LE PROJET, EN QUELQUES RÉPONSES — TOUTES FACULTATIVES
+
+          Ce que le visiteur dit ici n'est pas redemandé au téléphone : ses
+          réponses ouvrent son dossier déjà rempli. Aucune n'est exigée, et
+          c'est délibéré : chaque champ obligatoire de plus est un visiteur de
+          moins, et un dossier à moitié rempli vaut mieux qu'une demande perdue.
+          ───────────────────────────────────────────────────────────────────── */}
+      {questions.length > 0 && (
+        <fieldset className="formulaire-service__projet">
+          <legend className="formulaire-service__projet-titre">{t("projetTitre")}</legend>
+          <p className="formulaire-service__projet-detail">{t("projetDetail")}</p>
+          <div className="formulaire-service__paire">
+            {questions.map((question) => {
+              const id = `declaration-${question.code}`;
+              const valeur = declarations[question.code] ?? "";
+              const numerique = question.type === "ENTIER" || question.type === "DECIMAL";
+              return (
+                <div key={question.code}>
+                  <label className={`${etiquette} formulaire-service__question`} htmlFor={id}>
+                    {question.libelle}
+                  </label>
+                  {question.type === "ENUM" || question.type === "BOOLEEN" ? (
+                    <select
+                      id={id}
+                      className="formulaire-service__champ"
+                      value={valeur}
+                      onChange={(e) => declarer(question.code, e.target.value)}
+                    >
+                      <option value="">{t("choisir")}</option>
+                      {question.type === "BOOLEEN" ? (
+                        <>
+                          <option value="oui">{t("oui")}</option>
+                          <option value="non">{t("non")}</option>
+                        </>
+                      ) : (
+                        question.valeurs.map((v) => (
+                          <option key={v.valeur} value={v.valeur}>
+                            {v.libelle}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  ) : (
+                    <input
+                      id={id}
+                      className="formulaire-service__champ"
+                      type="text"
+                      inputMode={numerique ? "numeric" : undefined}
+                      maxLength={300}
+                      placeholder={question.unite ?? undefined}
+                      value={valeur}
+                      onChange={(e) => declarer(question.code, e.target.value)}
+                    />
+                  )}
+                  {question.aide && <p className="formulaire-service__aide">{question.aide}</p>}
+                </div>
+              );
+            })}
+          </div>
+        </fieldset>
+      )}
+
       {/* Le consentement est requis avant envoi : ces données sont
           personnelles, et le cabinet doit pouvoir prouver qu'il l'a obtenu. */}
       <label className="formulaire-service__consentement">
@@ -302,6 +402,22 @@ export function FormulaireService({
           required
         />
         {t("consentement")}
+      </label>
+
+      {/* ⚠️ UNE SECONDE CASE, FACULTATIVE, ET SON PROPRE TEXTE (14 octobre 2026).
+          Le cabinet envoie ses propositions par WhatsApp, le canal que ses
+          clients lisent. Il ne peut le faire que si le client l'a accepté en
+          toutes lettres : la case du dessus parle d'être recontacté, pas de
+          recevoir des messages. Sans cet accord, le responsable n'a pas le
+          bouton d'envoi, et il lit pourquoi. */}
+      <label className="formulaire-service__consentement">
+        <input
+          id="demande-accord-whatsapp"
+          type="checkbox"
+          checked={accordWhatsapp}
+          onChange={(e) => setAccordWhatsapp(e.target.checked)}
+        />
+        {t("consentementWhatsapp")}
       </label>
 
       <div className="formulaire-service__actions">

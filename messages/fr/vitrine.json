@@ -287,10 +287,22 @@
     "facultatif": "(facultatif)",
     "messagePlaceholder": "Votre situation en deux lignes, si vous le souhaitez.",
     "consentement": "J'accepte que le cabinet utilise ces informations pour traiter ma demande.",
+    "consentementWhatsapp": "J'accepte que le cabinet m'écrive sur WhatsApp à ce numéro, au sujet de ma demande (facultatif).",
     "envoyer": "Envoyer ma demande",
     "envoyerWhatsapp": "Envoyer sur WhatsApp",
     "objet": "Demande — {sujet}",
     "corpsIntro": "Bonjour,\n\nJe souhaite être contacté au sujet de : {sujet}.",
-    "confirmation": "Votre messagerie s'ouvre : envoyez le message pour que la demande nous parvienne."
+    "confirmation": "Votre messagerie s'ouvre : envoyez le message pour que la demande nous parvienne.",
+    "projetTitre": "Votre projet, en quelques réponses",
+    "projetDetail": "Facultatif. Ce que vous indiquez ici ne vous sera pas redemandé au téléphone : votre dossier s'ouvre déjà rempli.",
+    "choisir": "Choisir…",
+    "oui": "Oui",
+    "non": "Non",
+    "enregistrement": {
+      "enCours": "Enregistrement de votre demande…",
+      "reussi": "Votre demande est enregistrée : un responsable du cabinet vous rappelle au numéro indiqué.",
+      "echec": "Votre demande n'a pas pu être enregistrée ({motif}). Votre message WhatsApp reste le moyen de nous joindre.",
+      "indisponible": "le service d'enregistrement ne répond pas"
+    }
   }
 }

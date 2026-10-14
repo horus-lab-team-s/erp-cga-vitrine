@@ -3854,6 +3854,42 @@
   resize: vertical;
 }
 
+/* Le projet, en quelques réponses facultatives. Un cadre discret les sépare de
+   ce qui est exigé : le visiteur doit voir d'un coup d'œil qu'il peut les sauter. */
+.formulaire-service__projet {
+  margin: 0;
+  padding: 18px 18px 20px;
+  border: 1px solid var(--line-200);
+  background: var(--surface-alt, transparent);
+}
+
+.formulaire-service__projet-titre {
+  padding: 0 8px;
+  font: 600 14px/1.4 var(--police-titre);
+  color: var(--ink-900);
+}
+
+.formulaire-service__projet-detail {
+  margin: 0 0 16px;
+  font: 400 13px/1.5 var(--police-texte);
+  color: var(--ink-500);
+}
+
+/* Une question est une phrase : les capitales d'une étiquette la rendraient
+   criarde sur deux lignes. */
+.formulaire-service__question {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+  color: var(--ink-700, var(--ink-500));
+}
+
+.formulaire-service__aide {
+  margin: 5px 0 0;
+  font: 400 12px/1.45 var(--police-texte);
+  color: var(--ink-500);
+}
+
 .formulaire-service__paire {
   display: grid;
   gap: 16px;
@@ -4390,6 +4426,14 @@
   }
 }
 
+/* L'autre façon de régler, dite sans la mettre en avant : le client qui ne veut
+   pas payer en ligne doit savoir qu'il n'y est pas obligé. */
+.proforma__autrement {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-200);
+}
+
 .proforma__etat {
   margin: 0;
   font: 500 14px/1.6 var(--police-texte);
@@ -4472,7 +4516,10 @@
   padding: 10px 18px;
   border: 0;
   border-radius: var(--rayon-petit);
-  background: var(--magenta-600);
+  /* ⚠️ `--brand-magenta-600`, et non `--magenta-600`, qui n'existe pas : le bouton
+     sortait en blanc sur fond transparent, invisible. Vu en relisant la vidéo du
+     flux 4, le 14 octobre 2026 ; il l'était depuis sa création. */
+  background: var(--brand-magenta-600);
   color: #fff;
   font: 600 14px/1 var(--police-texte);
   cursor: pointer;
@@ -4487,4 +4534,153 @@
   flex: 1 1 100%;
   font: 400 13px/1.5 var(--police-texte);
   color: var(--danger);
+}
+
+/* ── Le suivi de création, refait le 14 octobre 2026 ──────────────────────────
+   La même frise que l'espace de la cliente dans la console : connectée ou par
+   son lien, elle lit la même chose. Sous 360 px, la frise défile plutôt que de
+   se tasser.
+
+   ⚠️ `.jalons` et non `.frise` : la vitrine a déjà une `.frise`, celle de
+   l'histoire du cabinet. Le premier jet la réemployait, les deux jeux de règles
+   se mêlaient, et les deux frises sortaient de travers. Vu à la vidéo. */
+.jalons {
+  list-style: none;
+  margin: 8px 0 4px;
+  padding: 4px 0 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(58px, 1fr));
+  overflow-x: auto;
+}
+
+.jalons__etape {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.jalons__etape + .jalons__etape::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--line-200);
+  z-index: 0;
+}
+
+.jalons__etape[data-etat="faite"] + .jalons__etape::before {
+  background: var(--brand-indigo-700);
+}
+
+.jalons__pastille {
+  position: relative;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 600 13px/1 var(--police-texte);
+  background: var(--surface);
+  border: 2px solid var(--line-200);
+  color: var(--ink-500);
+}
+
+.jalons__etape[data-etat="faite"] .jalons__pastille {
+  background: var(--brand-indigo-700);
+  border-color: var(--brand-indigo-700);
+  color: #fff;
+}
+
+.jalons__etape[data-etat="en-cours"] .jalons__pastille {
+  border-color: var(--brand-magenta-600);
+  color: var(--brand-magenta-600);
+  box-shadow: 0 0 0 4px var(--brand-magenta-100);
+}
+
+.jalons__nom {
+  font: 500 11.5px/1.3 var(--police-texte);
+  color: var(--ink-500);
+}
+
+.jalons__etape[data-etat="en-cours"] .jalons__nom {
+  color: var(--ink-900);
+  font-weight: 600;
+}
+
+.suivi__encart {
+  margin: 12px 0 4px;
+  padding: 16px;
+  border-radius: var(--rayon);
+  background: var(--brand-indigo-100);
+  color: var(--ink-900);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font: 400 14px/1.55 var(--police-texte);
+}
+
+.suivi__encart p {
+  margin: 0;
+}
+
+.suivi__etiquette {
+  display: block;
+  font: 600 10.5px/1.4 var(--police-texte);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand-indigo-700);
+}
+
+.suivi__jauge {
+  width: 100%;
+  height: 8px;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--line-100);
+}
+
+.suivi__jauge::-webkit-progress-bar {
+  background: var(--line-100);
+}
+
+.suivi__jauge::-webkit-progress-value {
+  background: var(--brand-indigo-700);
+  border-radius: 999px;
+}
+
+.suivi__jauge::-moz-progress-bar {
+  background: var(--brand-indigo-700);
+  border-radius: 999px;
+}
+
+.suivi__recus summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font: 500 13.5px/1.3 var(--police-texte);
+  color: var(--brand-indigo-700);
+}
+
+/* Les rubriques de la proforma, sur la page du client. */
+.proforma__rubrique + .proforma__rubrique {
+  margin-top: 10px;
+}
+
+.proforma__rubrique-titre {
+  margin: 0 0 4px;
+  font: 600 13px/1.4 var(--police-texte);
+  color: var(--ink-900);
+}
+
+.proforma__sous-total {
+  font-weight: 600;
 }
