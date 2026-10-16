@@ -942,5 +942,31 @@
     "prudence": "Si vous étiez en train d'envoyer un formulaire, vérifiez avant de recommencer : cette page ne sait pas dire si l'envoi a abouti.",
     "reference": "Référence à citer si vous appelez le cabinet",
     "reessayer": "Réessayer"
+  },
+  "carrieres": {
+    "kicker": "Nous rejoindre",
+    "titre": "Carrières au cabinet",
+    "detail": "Les postes ouverts au CGA Broad Range Consulting Group. Lisez les qualifications attendues, puis postulez avec votre CV.",
+    "aucune": "Aucun poste n'est ouvert pour l'instant. Revenez bientôt, ou écrivez-nous pour une candidature spontanée.",
+    "voir": "Lire l'offre et postuler",
+    "jusquau": "Candidatures jusqu'au",
+    "lePoste": "Le poste",
+    "qualifications": "Qualifications attendues",
+    "postuler": "Postuler",
+    "champNom": "Nom et prénom",
+    "champTel": "Téléphone ou WhatsApp",
+    "champMail": "Adresse électronique, facultative",
+    "champMessage": "Quelques mots sur votre motivation, facultatif",
+    "champCv": "Votre CV, en PDF (5 Mo au plus)",
+    "consentement": "J'accepte que le cabinet conserve ma candidature pour ce recrutement.",
+    "envoyer": "Envoyer ma candidature",
+    "envoi": "Envoi…",
+    "retour": "Tous les postes",
+    "contrats": {
+      "CDI": "CDI",
+      "CDD": "CDD",
+      "STAGE": "Stage",
+      "PRESTATION": "Prestation"
+    }
   }
 }

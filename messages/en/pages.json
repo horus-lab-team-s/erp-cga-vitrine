@@ -942,5 +942,31 @@
     "prudence": "If you were sending a form, check before starting over: this page cannot tell whether it went through.",
     "reference": "Reference to quote if you call the firm",
     "reessayer": "Try again"
+  },
+  "carrieres": {
+    "kicker": "Join us",
+    "titre": "Careers at the firm",
+    "detail": "Open positions at CGA Broad Range Consulting Group. Read the qualifications we expect, then apply with your CV.",
+    "aucune": "No position is open at the moment. Check back soon, or write to us for an unsolicited application.",
+    "voir": "Read the offer and apply",
+    "jusquau": "Applications until",
+    "lePoste": "The position",
+    "qualifications": "Expected qualifications",
+    "postuler": "Apply",
+    "champNom": "Full name",
+    "champTel": "Phone or WhatsApp",
+    "champMail": "Email address, optional",
+    "champMessage": "A few words about your motivation, optional",
+    "champCv": "Your CV, as a PDF (5 MB max)",
+    "consentement": "I agree that the firm keeps my application for this recruitment.",
+    "envoyer": "Send my application",
+    "envoi": "Sending…",
+    "retour": "All positions",
+    "contrats": {
+      "CDI": "Permanent",
+      "CDD": "Fixed-term",
+      "STAGE": "Internship",
+      "PRESTATION": "Contract"
+    }
   }
 }
