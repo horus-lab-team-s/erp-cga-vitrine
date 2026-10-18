@@ -41,6 +41,10 @@ export default async function Carrieres({ params }: { params: Promise<{ locale: 
             <ul className="carrieres__liste">
               {offres.map((o) => (
                 <li key={o.identifiant} className="carrieres__offre">
+                  {o.image && (
+                    // eslint-disable-next-line @next/next/no-img-element -- relayée par la route de la vitrine
+                    <img className="carrieres__vignette" src={`/api/carrieres/${o.identifiant}/image`} alt="" loading="lazy" />
+                  )}
                   <h2>{o.intitule}</h2>
                   <p className="carrieres__meta">
                     {o.lieu} · {t(`contrats.${o.type_de_contrat}`)}

@@ -4782,3 +4782,22 @@
   list-style: disc;
   padding-left: 1.4em;
 }
+
+/* L'image d'une offre de poste (18 octobre 2026, point 25). */
+.carrieres__vignette {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.carrieres__illustration {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 8px 0 24px;
+}

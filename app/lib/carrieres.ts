@@ -21,6 +21,8 @@ export type OffreDePoste = {
   date_limite: string | null;
   description: BlocDeTexte[];
   qualifications: BlocDeTexte[];
+  /** 18 octobre 2026 : l'offre a une image, servie par `/api/carrieres/{id}/image`. */
+  image?: boolean;
 };
 
 export function lireLesOffres(): Promise<OffreDePoste[]> {

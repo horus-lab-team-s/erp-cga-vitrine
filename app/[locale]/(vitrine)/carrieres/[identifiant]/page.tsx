@@ -47,6 +47,10 @@ export default async function Offre({ params }: { params: Promise<{ locale: stri
           <Link href="/carrieres" className="carrieres__retour">
             ← {t("retour")}
           </Link>
+          {offre.image && (
+            // eslint-disable-next-line @next/next/no-img-element -- relayée par la route de la vitrine
+            <img className="carrieres__illustration" src={`/api/carrieres/${offre.identifiant}/image`} alt={offre.intitule} />
+          )}
           {offre.description.length > 0 && (
             <>
               <h2>{t("lePoste")}</h2>
