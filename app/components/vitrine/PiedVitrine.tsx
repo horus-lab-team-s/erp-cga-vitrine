@@ -180,16 +180,11 @@ export function PiedVitrine() {
           </span>
         </div>
 
-        {/* La signature de l'atelier qui a réalisé le site, centrée en dernière
-            ligne. Lien sortant : `noopener noreferrer` comme partout ailleurs. */}
-        {/* 17 octobre 2026 : l'entreprise porteuse de la plateforme. */}
+        {/* La signature, centrée en dernière ligne : l'entreprise porteuse de la
+            plateforme (17 octobre 2026), seule depuis le 18 octobre, comme sur la
+            page de connexion de la console. */}
         <p className="pied-vitrine__signature">
           Powered by <strong>Zayra Technologies</strong>
-        </p>
-        <p className="pied-vitrine__signature">
-          <a href="https://horus-lab.com" target="_blank" rel="noopener noreferrer">
-            Powered by <strong>BïdaSoft</strong>
-          </a>
         </p>
       </div>
     </footer>
