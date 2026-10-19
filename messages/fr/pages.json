@@ -955,7 +955,7 @@
     "postuler": "Postuler",
     "champNom": "Nom et prénom",
     "champTel": "Téléphone ou WhatsApp",
-    "champMail": "Adresse électronique, facultative",
+    "champMail": "Adresse électronique, facultative : vous y recevrez l'accusé de réception",
     "champMessage": "Quelques mots sur votre motivation, facultatif",
     "champCv": "Votre CV, en PDF (5 Mo au plus)",
     "consentement": "J'accepte que le cabinet conserve ma candidature pour ce recrutement.",

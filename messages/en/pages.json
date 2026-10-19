@@ -955,7 +955,7 @@
     "postuler": "Apply",
     "champNom": "Full name",
     "champTel": "Phone or WhatsApp",
-    "champMail": "Email address, optional",
+    "champMail": "Email address, optional: you will receive the acknowledgment there",
     "champMessage": "A few words about your motivation, optional",
     "champCv": "Your CV, as a PDF (5 MB max)",
     "consentement": "I agree that the firm keeps my application for this recruitment.",
