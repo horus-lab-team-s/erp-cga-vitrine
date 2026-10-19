@@ -4613,6 +4613,35 @@
   font-weight: 600;
 }
 
+/* ⚠️ 19 octobre 2026 : sur un téléphone, six étapes côte à côte ne laissaient que
+   cinquante-huit points à chaque nom ; « Immatriculation » débordait sur ses voisines
+   et la sixième sortait de l'écran. Sous 560 px, la frise se lit de haut en bas. */
+@media (max-width: 560px) {
+  .jalons {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    overflow-x: visible;
+  }
+
+  .jalons__etape {
+    flex-direction: row;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .jalons__etape + .jalons__etape::before {
+    top: -10px;
+    right: auto;
+    left: 14px;
+    width: 2px;
+    height: 10px;
+  }
+
+  .jalons__nom {
+    font-size: 14px;
+  }
+}
+
 .suivi__encart {
   margin: 12px 0 4px;
   padding: 16px;
