@@ -24,12 +24,16 @@ import { SITE_URL } from "@/app/lib/site";
  * c'est elle qui protège — mais ils n'ont rien à faire dans un index public.
  * ─────────────────────────────────────────────────────────────────────────────
  */
+const PRIVEES = ["/proforma/", "/souscrire/devis/", "/souscrire/suivi/", "/mon-dossier/", "/ma-mission/"];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/proforma/", "/souscrire/devis/", "/souscrire/suivi/"],
+      // 19 octobre 2026 : le suivi d'une création et celui d'une prestation, ouverts
+      // par un lien signé, et chacun sous `/en/` aussi (le français n'a pas de préfixe).
+      disallow: PRIVEES.flatMap((chemin) => [chemin, `/en${chemin}`]),
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
