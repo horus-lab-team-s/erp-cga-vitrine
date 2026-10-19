@@ -3922,6 +3922,26 @@
   color: var(--brand-magenta-600);
 }
 
+/* 19 octobre 2026 (point 22) : joindre des documents, une fois la demande partie. */
+.formulaire-service__pieces {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--rayon);
+  background: var(--brand-indigo-100);
+  color: var(--ink-900);
+}
+
+.formulaire-service__pieces h3 {
+  margin: 0 0 4px;
+  font: 600 15px/1.4 var(--police-titre);
+}
+
+.formulaire-service__pieces p {
+  margin: 0 0 10px;
+  font: 400 13px/1.5 var(--police-texte);
+  color: var(--ink-700);
+}
+
 /* ── Documents à télécharger ───────────────────────────────────────────────
    Les proformas de la page Création. Toute la ligne est cliquable : sur un
    téléphone, viser une icône de 22 px demande de la précision. */

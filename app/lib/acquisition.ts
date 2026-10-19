@@ -142,5 +142,10 @@ export type QuestionAuVisiteur = {
  * rappel qui ne viendra pas.
  */
 export type ResultatDemande =
-  | { enregistree: true; canalDeRappel: "APPEL" | "WHATSAPP" | "COURRIEL" }
+  | {
+      enregistree: true;
+      canalDeRappel: "APPEL" | "WHATSAPP" | "COURRIEL";
+      /** 19 octobre 2026 (point 22) : de quoi joindre des pièces, juste après. Opaque. */
+      jetonDePieces?: string | null;
+    }
   | { enregistree: false; motif: string };

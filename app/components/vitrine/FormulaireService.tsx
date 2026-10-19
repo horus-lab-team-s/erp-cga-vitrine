@@ -7,6 +7,7 @@ import { deposerUneDemande } from "@/app/lib/actions-acquisition";
 import type { Demarche, QuestionAuVisiteur, ResultatDemande } from "@/app/lib/acquisition";
 
 import { IconeVitrine } from "./IconeVitrine";
+import { PiecesDeLaDemande } from "./PiecesDeLaDemande";
 
 /**
  * Le formulaire de demande, commun à tous les services.
@@ -214,6 +215,7 @@ export function FormulaireService({
   const etiquette = "formulaire-service__etiquette";
 
   return (
+    <>
     <form className="formulaire-service" onSubmit={envoyer} id="demande">
       <h3 className="formulaire-service__titre">{t("titre")}</h3>
       <p className="formulaire-service__detail">{t("detail")}</p>
@@ -478,5 +480,11 @@ export function FormulaireService({
         </p>
       )}
     </form>
+    {/* 19 octobre 2026 (point 22) : HORS du formulaire de la demande, qu'un
+        formulaire ne s'imbrique pas dans un autre. */}
+    {resultat !== null && resultat !== "en-cours" && resultat.enregistree && resultat.jetonDePieces && (
+      <PiecesDeLaDemande jeton={resultat.jetonDePieces} />
+    )}
+    </>
   );
 }

@@ -51,6 +51,7 @@ type AccuseDeDemande = {
   recue: boolean;
   canal_de_rappel: "APPEL" | "WHATSAPP" | "COURRIEL";
   message: string;
+  jeton_de_pieces?: string | null;
 };
 
 /**
@@ -121,7 +122,11 @@ export async function deposerUneDemande(demande: DemandeSoumise): Promise<Result
         declarations: declarationsPropres(demande.declarations),
       },
     });
-    return { enregistree: true, canalDeRappel: accuse.canal_de_rappel };
+    return {
+      enregistree: true,
+      canalDeRappel: accuse.canal_de_rappel,
+      jetonDePieces: accuse.jeton_de_pieces ?? null,
+    };
   } catch (erreur) {
     // ⚠️ Le motif du backend est rendu tel quel : « +33612345678 n'est pas un
     // numéro camerounais exploitable » dit au visiteur quoi corriger, « une erreur
@@ -133,6 +138,43 @@ export async function deposerUneDemande(demande: DemandeSoumise): Promise<Result
           ? erreur.message
           : "Le service d'enregistrement est momentanément indisponible.",
     };
+  }
+}
+
+/** Ce que le bloc des pièces jointes affiche : la dernière erreur, et ce qui est parti. */
+export type EtatDesPiecesJointes = { echec: string | null; recues: string[] };
+
+/**
+ * Joint une pièce à la demande qu'on vient de déposer (19 octobre 2026, point 22).
+ *
+ * ⚠️ Le jeton vient de l'accusé : il est opaque, et ne vaut que pour cette demande.
+ * Aucune vérification de type ni de taille ici : le serveur les fait (voir
+ * `DepotDePiece`, même raisonnement).
+ */
+export async function joindreUnePieceALaDemande(
+  precedent: EtatDesPiecesJointes,
+  donnees: FormData,
+): Promise<EtatDesPiecesJointes> {
+  const recues = precedent.recues;
+  const jeton = String(donnees.get("jeton") ?? "").trim();
+  const fichier = donnees.get("fichier");
+  if (!jeton) return { echec: "Rechargez la page, puis renvoyez votre demande.", recues };
+  if (!(fichier instanceof File) || fichier.size === 0) {
+    return { echec: "Choisissez un document à joindre.", recues };
+  }
+  const envoi = new FormData();
+  envoi.append("jeton", jeton);
+  envoi.append("fichier", fichier);
+  try {
+    const recue = await appeler<{ nom: string; pieces: number }>("/acquisition/demandes/pieces", {
+      methode: "POST",
+      formulaire: envoi,
+    });
+    const texte = `« ${recue.nom} » est jointe à votre demande (${recue.pieces} pièce${recue.pieces > 1 ? "s" : ""}).`;
+    return { echec: null, recues: [...recues, texte] };
+  } catch (erreur) {
+    if (erreur instanceof ErreurApi && erreur.statut !== null) return { echec: erreur.message, recues };
+    return { echec: "L'envoi n'a pas abouti : réessayez dans un instant.", recues };
   }
 }
 
