@@ -119,6 +119,7 @@ export const config = {
   // Lister les dossiers statiques est plus long mais ne peut pas se retourner ainsi.
   matcher: [
     "/",
-    "/((?!api|_next|_vercel|images|marque|documents|favicon|robots|sitemap).*)",
+    // 20 octobre 2026 : `telechargements`, le paquet Android, servi tel quel et non traduit.
+    "/((?!api|_next|_vercel|images|marque|documents|telechargements|favicon|robots|sitemap).*)",
   ],
 };
