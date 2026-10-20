@@ -105,6 +105,10 @@ ENV NEXT_PUBLIC_ADRESSE_CONSOLE=${NEXT_PUBLIC_ADRESSE_CONSOLE}
 # annonce « bientôt disponible ». Voir `app/lib/application-mobile.ts`.
 ARG NEXT_PUBLIC_LIEN_APPLICATION_ANDROID
 ENV NEXT_PUBLIC_LIEN_APPLICATION_ANDROID=${NEXT_PUBLIC_LIEN_APPLICATION_ANDROID}
+# 20 octobre 2026 : l'adresse publique du site lui-même (plan du site, aperçus de partage). Absente,
+# le défaut du code s'applique (`app/lib/site.ts`).
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
