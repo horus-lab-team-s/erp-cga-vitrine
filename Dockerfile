@@ -100,6 +100,11 @@ COPY . .
 #     docker build --build-arg NEXT_PUBLIC_ADRESSE_CONSOLE=https://… .
 ARG NEXT_PUBLIC_ADRESSE_CONSOLE
 ENV NEXT_PUBLIC_ADRESSE_CONSOLE=${NEXT_PUBLIC_ADRESSE_CONSOLE}
+# 20 octobre 2026 : le lien de téléchargement de l'application mobile (fiche Google
+# Play ou fichier APK du cabinet, en https). Absent, la page « Application mobile »
+# annonce « bientôt disponible ». Voir `app/lib/application-mobile.ts`.
+ARG NEXT_PUBLIC_LIEN_APPLICATION_ANDROID
+ENV NEXT_PUBLIC_LIEN_APPLICATION_ANDROID=${NEXT_PUBLIC_LIEN_APPLICATION_ANDROID}
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build

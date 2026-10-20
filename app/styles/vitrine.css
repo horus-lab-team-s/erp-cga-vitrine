@@ -4850,3 +4850,177 @@
   border-radius: 16px;
   margin: 8px 0 24px;
 }
+
+/* ── L'application mobile (20 octobre 2026) ──────────────────────────────── */
+
+.application {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.application__texte .chapeau {
+  margin-left: 0;
+}
+
+.application__atouts,
+.application__etapes {
+  margin: 22px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  color: var(--ink-700);
+}
+
+.application__atouts {
+  list-style: none;
+}
+
+.application__atouts li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.application__atouts li svg {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  color: var(--brand-magenta-600);
+}
+
+.application__etapes {
+  padding-left: 22px;
+  list-style: decimal;
+}
+
+.application__etapes li::marker {
+  color: var(--brand-magenta-600);
+  font-weight: 700;
+}
+
+.application__actions {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: center;
+}
+
+.application__note {
+  font-size: 13px;
+  color: var(--ink-500);
+}
+
+.application__attente {
+  margin-top: 26px;
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--brand-magenta-600);
+  border-radius: 10px;
+  background: var(--brand-magenta-100);
+  color: var(--ink-700);
+}
+
+.application__attente strong {
+  color: var(--brand-indigo-900);
+}
+
+.application__telephone,
+.application__ecran img {
+  justify-self: center;
+}
+
+.application__telephone img,
+.application__ecran img {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  border-radius: 28px;
+  border: 6px solid var(--brand-indigo-900);
+  box-shadow: 0 24px 60px rgba(46, 27, 77, 0.22);
+}
+
+.application__galerie {
+  text-align: left;
+}
+
+.application__ecran {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.application__ecran img {
+  max-width: 240px;
+}
+
+.application__ecran figcaption {
+  display: grid;
+  gap: 4px;
+  max-width: 240px;
+  font-size: 14px;
+  color: var(--ink-500);
+}
+
+.application__ecran figcaption strong {
+  color: var(--ink-900);
+  font-size: 15px;
+}
+
+.application__questions {
+  max-width: 760px;
+}
+
+.application__question {
+  border-bottom: 1px solid var(--line-200);
+  padding: 16px 0;
+}
+
+.application__question summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: 600;
+  color: var(--ink-900);
+}
+
+.application__question summary::-webkit-details-marker {
+  display: none;
+}
+
+.application__question[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.application__question p {
+  margin: 10px 0 0;
+  color: var(--ink-700);
+}
+
+@media (max-width: 980px) {
+  .application {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .application__telephone img {
+    max-width: 240px;
+  }
+}
+
+@media (max-width: 600px) {
+  .application__galerie {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 14px;
+  }
+
+  .application__ecran img {
+    border-width: 4px;
+    border-radius: 20px;
+  }
+}

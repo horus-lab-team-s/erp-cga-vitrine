@@ -39,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { chemin: "/formations", priorite: 0.7, frequence: "monthly" },
     { chemin: "/estimation", priorite: 0.7, frequence: "monthly" },
     { chemin: "/souscrire", priorite: 0.8, frequence: "monthly" },
+    { chemin: "/application", priorite: 0.7, frequence: "monthly" },
     { chemin: "/le-cabinet", priorite: 0.6, frequence: "monthly" },
     { chemin: "/contact", priorite: 0.6, frequence: "monthly" },
     { chemin: "/blog", priorite: 0.8, frequence: "weekly" },

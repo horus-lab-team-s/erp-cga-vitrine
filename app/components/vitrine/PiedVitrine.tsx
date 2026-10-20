@@ -127,6 +127,9 @@ export function PiedVitrine() {
               <li>
                 <a href={ADRESSE_CONNEXION}>{commun("actions.espaceClient")}</a>
               </li>
+              <li>
+                <Link href="/application">{t("application")}</Link>
+              </li>
             </ul>
           </div>
 
