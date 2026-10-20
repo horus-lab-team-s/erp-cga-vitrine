@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
+import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { FormulaireSouscription } from "@/app/components/vitrine/FormulaireSouscription";
 import { montantFcfa } from "@/app/lib/formats";
 import { aujourdhui } from "@/app/lib/portefeuille";
+import { alternatives } from "@/app/lib/site";
 import { lireCatalogue, type Service, type Tarif } from "@/app/lib/souscription";
 
-export const metadata: Metadata = {
-  title: "Souscrire en ligne",
-  description: "Établir un devis au barème du jour et souscrire par Mobile Money.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "Souscrire en ligne",
+    description: "Établir un devis au barème du jour et souscrire par Mobile Money.",
+    alternates: alternatives(locale, "/souscrire"),
+  };
+}
 export const dynamic = "force-dynamic";
 
 /**
@@ -48,21 +58,27 @@ export default async function Souscrire({
   const jour = aujourdhui();
   const catalogue = await lireCatalogue(jour);
 
+  // ⚠️ 19 octobre 2026 : le titre se glissait sous l'en-tête fixe du site. La page
+  // passe par le même chapeau que les autres, qui réserve la place de l'en-tête.
   return (
-    <main className="conteneur" style={{ paddingBlock: 48, maxWidth: 860, marginInline: "auto", paddingInline: 16 }}>
-      <h1 style={{ marginBottom: 8 }}>Souscrire en ligne</h1>
-      <p style={{ color: "#4f5b60", marginTop: 0 }}>
-        Un devis au barème du jour, valable trente jours, réglé par Mobile Money.
-      </p>
-      {"echec" in catalogue ? (
-        <p role="alert">
-          Le catalogue ne peut pas être lu pour le moment ({catalogue.echec}). Vous pouvez joindre le cabinet depuis la page
-          Contact.
-        </p>
-      ) : (
-        <Catalogue services={catalogue.valeur} jour={jour} choisi={service} />
-      )}
-    </main>
+    <>
+      <EnteteDePage
+        kicker="Souscription"
+        titre="Souscrire en ligne"
+        detail="Un devis au barème du jour, valable trente jours, réglé par Mobile Money."
+        images={["/images/pages/adherent-b.jpg", "/images/pages/cabinet-a.jpg"]}
+      />
+      <main className="conteneur" style={{ paddingBlock: 48, maxWidth: 860, marginInline: "auto", paddingInline: 16 }}>
+        {"echec" in catalogue ? (
+          <p role="alert">
+            Le catalogue ne peut pas être lu pour le moment ({catalogue.echec}). Vous pouvez joindre le cabinet depuis la
+            page Contact.
+          </p>
+        ) : (
+          <Catalogue services={catalogue.valeur} jour={jour} choisi={service} />
+        )}
+      </main>
+    </>
   );
 }
 

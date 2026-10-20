@@ -1,10 +1,13 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { FormulaireService } from "@/app/components/vitrine/FormulaireService";
 import { IconeVitrine } from "@/app/components/vitrine/IconeVitrine";
+import type { QuestionAuVisiteur } from "@/app/lib/acquisition";
+import { lireLesQuestionsDuVisiteur } from "@/app/lib/questions-visiteur";
 import { FORMES_JURIDIQUES } from "@/app/lib/services-vitrine";
 import { Link } from "@/i18n/navigation";
 
@@ -15,7 +18,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.creation" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/creer-mon-entreprise"), title: t("titre"), description: t("detail") };
 }
 
 /**
@@ -51,6 +55,7 @@ export default async function CreerMonEntreprise({
   const { locale } = await params;
   setRequestLocale(locale);
   const { service, forme } = await searchParams;
+  const questions = await lireLesQuestionsDuVisiteur("CREATION");
 
   return (
     <>
@@ -58,7 +63,7 @@ export default async function CreerMonEntreprise({
       <PiecesDuDossier />
       <Proformas />
       <Questions />
-      <Demande sujetPrecise={service} formeChoisie={forme} />
+      <Demande sujetPrecise={service} formeChoisie={forme} questions={questions} />
     </>
   );
 }
@@ -122,9 +127,11 @@ function Proformas() {
 function Demande({
   sujetPrecise,
   formeChoisie,
+  questions,
 }: {
   sujetPrecise?: string;
   formeChoisie?: string;
+  questions: QuestionAuVisiteur[];
 }) {
   const t = useTranslations("pages.creation");
   const commun = useTranslations("commun");
@@ -141,6 +148,7 @@ function Demande({
              visiteur en change. */
           formes={FORMES_JURIDIQUES.map((f) => f.codeBareme)}
           formeInitiale={formeChoisie}
+          questions={questions}
         />
       </div>
     </section>

@@ -225,7 +225,9 @@
     "notreHistoire": "Our story",
     "notreEquipe": "Our team",
     "nosPartenaires": "Our partners",
-    "contactezNous": "Contact us"
+    "contactezNous": "Contact us",
+    "nousRejoindre": "Join us",
+    "application": "Mobile app"
   },
   "partenaires": {
     "kicker": "Our partners",
@@ -287,10 +289,22 @@
     "facultatif": "(optional)",
     "messagePlaceholder": "Your situation in two lines, if you wish.",
     "consentement": "I agree that the firm may use this information to handle my request.",
+    "consentementWhatsapp": "I agree that the firm may write to me on WhatsApp at this number about my request (optional).",
     "envoyer": "Send my request",
     "envoyerWhatsapp": "Send on WhatsApp",
     "objet": "Request — {sujet}",
     "corpsIntro": "Hello,\n\nI would like to be contacted about: {sujet}.",
-    "confirmation": "Your mail client is opening: send the message so the request reaches us."
+    "confirmation": "Your mail client is opening: send the message so the request reaches us.",
+    "projetTitre": "Your project, in a few answers",
+    "projetDetail": "Optional. What you tell us here will not be asked again on the phone: your file opens already filled in.",
+    "choisir": "Choose…",
+    "oui": "Yes",
+    "non": "No",
+    "enregistrement": {
+      "enCours": "Recording your request…",
+      "reussi": "Your request is recorded: a member of the firm will call you back on the number given.",
+      "echec": "Your request could not be recorded ({motif}). Your WhatsApp message remains the way to reach us.",
+      "indisponible": "the recording service is not responding"
+    }
   }
 }

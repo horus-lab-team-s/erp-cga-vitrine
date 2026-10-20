@@ -95,8 +95,43 @@ export type DemandeSoumise = {
    * recontacter ». Ce n'est **pas** un consentement WhatsApp : voir l'action.
    */
   consentementContact: boolean;
+  /**
+   * La SECONDE case, facultative : « m'écrire sur WhatsApp à ce numéro ».
+   *
+   * ⚠️ Elle est distincte de la première, et ce n'est pas de la prudence de
+   * principe. Consentir à être recontacté n'est pas consentir à recevoir des
+   * messages WhatsApp : ce sont deux textes, et le visiteur ne s'engage que sur
+   * celui qu'il a coché. Voir `VERSION_DU_TEXTE_WHATSAPP`.
+   */
+  consentementWhatsapp?: boolean;
   /** D'où vient la demande, pour mesurer ce qui amène les prospects. */
   origine: string;
+  /** Les réponses aux questions du projet, par code de question. Toutes facultatives. */
+  declarations?: Record<string, string>;
+};
+
+/**
+ * Une question que le site pose au visiteur avant qu'un responsable le rappelle.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ⚠️ ELLE VIENT DU RÉFÉRENTIEL DU CABINET, ET LE SITE N'EN ÉCRIT AUCUNE.
+ *
+ * Le cabinet l'a demandé le 14 octobre 2026 : une information ne se saisit pas
+ * deux fois. Ce que le visiteur répond ici ouvre la qualification de son dossier
+ * déjà remplie, et le responsable ne le lui redemande pas au téléphone.
+ *
+ * Une liste de questions recopiée dans ce fichier divergerait du questionnaire
+ * du cabinet à la première question ajoutée : le site poserait une question que
+ * personne ne lit, ou n'en poserait pas une que le chiffrage attend.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+export type QuestionAuVisiteur = {
+  code: string;
+  libelle: string;
+  type: "ENUM" | "BOOLEEN" | "ENTIER" | "DECIMAL" | "TEXTE" | "LISTE" | string;
+  valeurs: { valeur: string; libelle: string }[];
+  unite: string | null;
+  aide: string;
 };
 
 /**
@@ -107,5 +142,10 @@ export type DemandeSoumise = {
  * rappel qui ne viendra pas.
  */
 export type ResultatDemande =
-  | { enregistree: true; canalDeRappel: "APPEL" | "WHATSAPP" | "COURRIEL" }
+  | {
+      enregistree: true;
+      canalDeRappel: "APPEL" | "WHATSAPP" | "COURRIEL";
+      /** 19 octobre 2026 (point 22) : de quoi joindre des pièces, juste après. Opaque. */
+      jetonDePieces?: string | null;
+    }
   | { enregistree: false; motif: string };

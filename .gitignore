@@ -20,3 +20,6 @@ next-env.d.ts
 # Les traces et rapports du parcours navigateur : produits à chaque exécution.
 /test-results/
 /playwright-report/
+
+# Le paquet Android déposé au build par le déploiement : jamais en dépôt.
+public/telechargements/*.apk

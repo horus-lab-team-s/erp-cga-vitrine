@@ -3,6 +3,8 @@ import { dateCourte } from "@/app/lib/formats";
 
 import { DepotDePiece } from "@/app/components/vitrine/DepotDePiece";
 import { lireMonDossier } from "@/app/lib/actions-creation-suivi";
+import { ADRESSE_CONNEXION } from "@/app/lib/adresse-console";
+import { ETAPES_DE_CREATION, positionDansLaCreation } from "@/app/lib/etapes-de-creation";
 
 export const metadata: Metadata = {
   title: "Mon dossier de création",
@@ -10,38 +12,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
-
-/** Les étapes, dans les mots de la cliente. Le code du domaine ne lui dit rien. */
-const ETAPES: Record<string, { titre: string; detail: string }> = {
-  QUALIFICATION: {
-    titre: "Nous réunissons vos pièces",
-    detail: "Envoyez les documents de la liste ci-dessous. Le cabinet vous dira si l’un d’eux doit être repris.",
-  },
-  CONSTITUTION: {
-    titre: "Nous préparons vos statuts",
-    detail: "Vos pièces sont réunies. Le cabinet constitue le dossier à déposer.",
-  },
-  DEPOT_CFCE: {
-    titre: "Votre dossier est déposé au CFCE",
-    detail: "Il suit son cours au guichet unique. Vous n’avez rien à faire pour l’instant.",
-  },
-  SUIVI_IMMATRICULATION: {
-    titre: "Votre immatriculation est en cours",
-    detail: "Le cabinet suit le greffe et récupère vos numéros dès qu’ils sont délivrés.",
-  },
-  LIVRAISON: {
-    titre: "Vos documents vous sont remis",
-    detail: "Le cabinet vous contacte pour la remise de vos originaux.",
-  },
-  CONVERTI: {
-    titre: "Votre société est immatriculée",
-    detail: "Félicitations. Le cabinet vous a écrit séparément pour la suite.",
-  },
-  ABANDONNE: {
-    titre: "Ce dossier est clos",
-    detail: "Contactez le cabinet si vous pensez qu’il s’agit d’une erreur.",
-  },
-};
 
 /**
  * Le suivi de formalité, ouvert par un lien signé, sans compte.
@@ -101,27 +71,18 @@ export default async function PageMonDossier({
     );
   }
 
-  // ⚠️ L'ÉTAPE NE DOIT PAS CONTREDIRE LES NUMÉROS AFFICHÉS JUSTE EN DESSOUS.
+  // ⚠️ LA PAGE DIT OÙ ELLE EN EST, CE QUI VIENT, ET CE QU'ON ATTEND D'ELLE (14 octobre 2026).
   //
-  // Le RCCM et le NIU arrivent PENDANT `SUIVI_IMMATRICULATION` : l'étape ne
-  // change qu'au passage à la livraison, qui est un geste du cabinet et peut
-  // suivre de plusieurs jours. La page annonçait donc « votre immatriculation
-  // est en cours », puis, deux lignes plus bas, « votre société est
-  // immatriculée » avec les numéros.
+  // Le cabinet l'a demandée « plus soft et plus indicative ». Elle disait l'étape
+  // en une phrase, sans la situer dans le parcours. La frise et les deux encarts
+  // viennent de `etapes-de-creation.ts`, en double dans la console : connectée ou
+  // par ce lien, elle lit la même chose.
   //
-  // Vu en relisant la page rendue, pas en écrivant le code : les deux blocs
-  // sont justes séparément.
-  const etape =
-    lecture.identifiants.immatriculee && lecture.etape === "SUIVI_IMMATRICULATION"
-      ? {
-          titre: "Votre société est immatriculée",
-          detail:
-            "Vos numéros sont délivrés. Le cabinet réunit vos originaux et vous contacte pour la remise.",
-        }
-      : (ETAPES[lecture.etape] ?? {
-          titre: "Votre dossier avance",
-          detail: "Le cabinet vous tient informée.",
-        });
+  // ⚠️ L'étape ne contredit pas les numéros : voir `positionDansLaCreation`.
+  const position = positionDansLaCreation(lecture.etape, lecture.identifiants.immatriculee);
+  const etape = ETAPES_DE_CREATION[position.courante];
+  const attendues = lecture.pieces.filter((p) => p.obligatoire);
+  const recues = attendues.filter((p) => p.fournie).length;
   const manquantes = lecture.pieces.filter((p) => !p.fournie);
   const fournies = lecture.pieces.filter((p) => p.fournie);
 
@@ -129,26 +90,76 @@ export default async function PageMonDossier({
     <main className="proforma">
       <section className="bloc proforma__bloc">
         <div className="proforma__carte">
-          <p className="proforma__surtitre">Votre dossier de création</p>
+          <p className="proforma__surtitre">Votre société en création · {lecture.forme_juridique}</p>
           <h1 className="proforma__titre">{lecture.denomination_souhaitee}</h1>
-          <p className="proforma__texte">
-            <strong>{etape.titre}</strong>
-            <br />
-            {etape.detail}
-          </p>
+
+          {position.abandonnee ? (
+            <p className="proforma__texte">
+              <strong>Ce dossier est clos.</strong> Contactez le cabinet si vous pensez qu&rsquo;il
+              s&rsquo;agit d&rsquo;une erreur.
+            </p>
+          ) : (
+            <>
+              {/* ⚠️ Une liste ordonnée : un lecteur d'écran annonce « étape 3 sur 6, en
+                  cours », ce qu'une rangée de cercles colorés ne dirait à personne. */}
+              <ol className="jalons" aria-label="Les étapes de votre création">
+                {ETAPES_DE_CREATION.map((e, i) => {
+                  const etat =
+                    position.terminee || i < position.courante
+                      ? "faite"
+                      : i === position.courante
+                        ? "en-cours"
+                        : "a-venir";
+                  return (
+                    <li
+                      key={e.code}
+                      className="jalons__etape"
+                      data-etat={etat}
+                      aria-current={etat === "en-cours" ? "step" : undefined}
+                    >
+                      <span className="jalons__pastille" aria-hidden="true">
+                        {etat === "faite" ? "✓" : i + 1}
+                      </span>
+                      <span className="jalons__nom">
+                        {e.nom}
+                        <span className="depot__invisible">
+                          {etat === "faite" ? " : fait" : etat === "en-cours" ? " : en cours" : " : à venir"}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+
+              <div className="suivi__encart">
+                {position.terminee ? (
+                  <p>
+                    <strong>Votre société est créée.</strong> Toutes les étapes sont franchies.
+                  </p>
+                ) : (
+                  <>
+                    <p>
+                      <span className="suivi__etiquette">En ce moment</span>
+                      {etape.cabinet}
+                    </p>
+                    <p>
+                      <span className="suivi__etiquette">De votre côté</span>
+                      {etape.vous ??
+                        "Rien à faire pour l’instant. Le cabinet vous écrit à chaque étape franchie."}
+                    </p>
+                  </>
+                )}
+              </div>
+            </>
+          )}
 
           {/*
             ⚠️ LES NUMÉROS D'ABORD, DÈS QU'ILS EXISTENT.
 
-            C'est la nouvelle qu'elle attend depuis le premier jour, et elle
-            passait à la trappe : la page la menait jusqu'à « votre
-            immatriculation est en cours » sans jamais lui dire que sa société
-            existait, alors que le cabinet, lui, voyait le RCCM au dossier.
-
-            Chaque numéro vient avec sa date : « obtenu le » est ce qu'une
-            banque demande. La patente et la CNPS suivent souvent de plusieurs
-            semaines, et leur absence ne veut pas dire qu'il manque quelque
-            chose : on ne les affiche que lorsqu'elles arrivent.
+            C'est la nouvelle qu'elle attend depuis le premier jour. Chaque numéro
+            vient avec sa date : « obtenu le » est ce qu'une banque demande. La
+            patente et la CNPS suivent souvent de plusieurs semaines : on ne les
+            affiche que lorsqu'elles arrivent.
           */}
           {lecture.identifiants.immatriculee && (
             <div className="proforma__detail">
@@ -180,63 +191,67 @@ export default async function PageMonDossier({
             </div>
           )}
 
-          {/* ⚠️ Le compte ne retient que ce qui BLOQUE : une pièce d'usage
-              absente n'empêche pas le dépôt, et l'annoncer comme manquante
-              ferait courir la cliente après un document dont personne n'a
-              besoin. */}
-          {!lecture.clos && lecture.manquantes_bloquantes > 0 && (
-            <p className="proforma__texte">
-              Il nous manque{" "}
-              <strong>
-                {lecture.manquantes_bloquantes} document
-                {lecture.manquantes_bloquantes > 1 ? "s" : ""}
-              </strong>{" "}
-              pour déposer votre dossier.
-            </p>
-          )}
-
-          {!lecture.clos && manquantes.length > 0 && (
+          {attendues.length > 0 && (
             <>
-              <h2 className="proforma__intertitre">À envoyer</h2>
-              <ul className="suivi__liste">
-                {manquantes.map((piece) => (
-                  <li key={piece.code} className="suivi__ligne">
-                    <span>
-                      {piece.libelle}
-                      {!piece.obligatoire && " (facultatif)"}
-                    </span>
-                    <DepotDePiece
-                      reference={lecture.reference}
-                      sceau={s}
-                      code={piece.code}
-                      libelle={piece.libelle}
-                    />
-                  </li>
-                ))}
-              </ul>
+              <h2 className="proforma__intertitre">Vos documents</h2>
+              {/* ⚠️ Le compte ne retient que ce qui est nécessaire : une pièce
+                  d'usage absente n'empêche pas le dépôt, et la compter ferait
+                  courir après un document dont personne n'a besoin. */}
+              <p className="proforma__texte">
+                <strong>
+                  {recues} sur {attendues.length}
+                </strong>{" "}
+                documents nécessaires reçus
+              </p>
+              <progress className="suivi__jauge" max={attendues.length} value={recues}>
+                {recues} sur {attendues.length}
+              </progress>
             </>
           )}
 
+          {!lecture.clos && manquantes.length > 0 && (
+            <ul className="suivi__liste">
+              {manquantes.map((piece) => (
+                <li key={piece.code} className="suivi__ligne">
+                  <span>
+                    {piece.libelle}
+                    {!piece.obligatoire && " (facultatif)"}
+                  </span>
+                  <DepotDePiece
+                    reference={lecture.reference}
+                    sceau={s}
+                    code={piece.code}
+                    libelle={piece.libelle}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+
           {fournies.length > 0 && (
-            <>
-              <h2 className="proforma__intertitre">Déjà reçus</h2>
+            <details className="suivi__recus">
+              <summary>Déjà reçus ({fournies.length})</summary>
               <ul className="suivi__liste">
                 {fournies.map((piece) => (
                   <li key={piece.code} className="suivi__ligne">
                     <span>{piece.libelle}</span>
                     <span className="suivi__mention">
-                      reçu{piece.fournie_le ? ` le ${piece.fournie_le.split("-").reverse().join("/")}` : ""}
+                      reçu{piece.fournie_le ? ` le ${dateCourte(piece.fournie_le)}` : ""}
                     </span>
                   </li>
                 ))}
               </ul>
-            </>
+            </details>
           )}
 
+          {/* ⚠️ Le compte s'ajoute au lien (14 octobre 2026) : elle a reçu, dans le même
+              courriel, de quoi choisir son mot de passe. On le lui rappelle sans
+              l'imposer : ce lien suffit pour tout ce que la page permet. */}
           <p className="suivi__mention">
-            Conservez le lien de ce message : il reste valable jusqu&rsquo;à
-            l&rsquo;immatriculation de votre société. Ne le transférez pas, il
-            ouvre votre dossier sans mot de passe.
+            Vous avez choisi un mot de passe ? Retrouvez ce dossier dans{" "}
+            <a href={ADRESSE_CONNEXION}>votre espace client</a>. Sinon, conservez ce lien : il reste
+            valable jusqu&rsquo;à l&rsquo;immatriculation de votre société. Ne le transférez pas, il ouvre
+            votre dossier sans mot de passe.
           </p>
         </div>
       </section>

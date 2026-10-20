@@ -2,12 +2,14 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EtapesProgression } from "@/app/components/vitrine/EtapesProgression";
 import { Heros } from "@/app/components/vitrine/Heros";
 import { IconeVitrine } from "@/app/components/vitrine/IconeVitrine";
 import { RubanPartenaires } from "@/app/components/vitrine/RubanPartenaires";
 import { RubanTemoignages } from "@/app/components/vitrine/RubanTemoignages";
+import { ApplicationSurLAccueil } from "@/app/components/vitrine/TelechargementApplication";
 import { SERVICES_VITRINE } from "@/app/lib/services-vitrine";
 import { Link } from "@/i18n/navigation";
 
@@ -19,6 +21,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "vitrine" });
   return {
+    alternates: alternatives(locale, "/"),
     title: t("heros.slide1.titre"),
     description: t("services.detail"),
   };
@@ -28,7 +31,8 @@ export async function generateMetadata({
  * Accueil — maquette `Site vitrine CGA`, section « surAccueil ».
  *
  * Ordre du dessin, respecté : héros avec formulaire et chiffres, services, ce que
- * change l'adhésion, les trois étapes, les témoignages. Rien d'autre.
+ * change l'adhésion, les trois étapes, les témoignages. Rien d'autre, sinon
+ * (20 octobre 2026) le rappel de l'application mobile, après les trois étapes.
  *
  * En particulier : **pas de questions fréquentes ici**. Elles existent dans les
  * données mais ne sont rendues que sur la page Création. J'en avais ajouté sur
@@ -50,6 +54,7 @@ export default async function Accueil({
       <Services />
       <CeQueChangeLAdhesion />
       <Etapes />
+      <ApplicationSurLAccueil />
       <RubanPartenaires />
       <RubanTemoignages />
     </>

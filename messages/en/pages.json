@@ -942,5 +942,102 @@
     "prudence": "If you were sending a form, check before starting over: this page cannot tell whether it went through.",
     "reference": "Reference to quote if you call the firm",
     "reessayer": "Try again"
+  },
+  "carrieres": {
+    "kicker": "Join us",
+    "titre": "Careers at the firm",
+    "detail": "Open positions at CGA Broad Range Consulting Group. Read the qualifications we expect, then apply with your CV.",
+    "aucune": "No position is open at the moment. Check back soon, or write to us for an unsolicited application.",
+    "voir": "Read the offer and apply",
+    "jusquau": "Applications until",
+    "lePoste": "The position",
+    "qualifications": "Expected qualifications",
+    "postuler": "Apply",
+    "champNom": "Full name",
+    "champTel": "Phone or WhatsApp",
+    "champMail": "Email address, optional: you will receive the acknowledgment there",
+    "champMessage": "A few words about your motivation, optional",
+    "champCv": "Your CV, as a PDF (5 MB max)",
+    "consentement": "I agree that the firm keeps my application for this recruitment.",
+    "envoyer": "Send my application",
+    "envoi": "Sending…",
+    "retour": "All positions",
+    "contrats": {
+      "CDI": "Permanent",
+      "CDD": "Fixed-term",
+      "STAGE": "Internship",
+      "PRESTATION": "Contract"
+    }
+  },
+  "application": {
+    "kicker": "Mobile app",
+    "titre": "Your file in your pocket",
+    "detail": "Send your invoices with a photo, follow your deadlines and pay by mobile money: the member area, on your Android phone.",
+    "accueilTitre": "The member area, on your phone",
+    "accueilDetail": "An invoice arrives on WhatsApp or by email: it reaches the firm in two taps, from the app.",
+    "accueilAction": "Discover the app",
+    "atouts": {
+      "photo": "A photo, a gallery image or a PDF scan: the document goes to the firm",
+      "echeances": "Your deadlines, your fees and your mobile money payments",
+      "horsLigne": "Your documents stay readable, even without a network"
+    },
+    "telechargement": {
+      "kicker": "Download",
+      "titre": "Install the app",
+      "detail": "It is reserved for the firm's members: you sign in with your client area credentials.",
+      "googlePlay": "Get it on Google Play",
+      "android": "Download for Android",
+      "exigence": "Android {version} or later.",
+      "bientot": "Available for download soon.",
+      "enAttendant": "In the meantime, your account manager sends you the installation link on request, and your client area remains open on this site.",
+      "etapes": {
+        "installer": "Install the app on your Android phone.",
+        "connecter": "Sign in with your client area email and password.",
+        "deposer": "Send your first document: it reaches the firm within a minute."
+      }
+    },
+    "ecrans": {
+      "kicker": "Its screens",
+      "titre": "What you do with it",
+      "accueil": {
+        "titre": "Your month",
+        "detail": "Expected documents, overdue items and filed documents, at a glance.",
+        "alt": "App home: the member's month and three figures"
+      },
+      "deposer": {
+        "titre": "Send a document",
+        "detail": "Take a photo, pick from the gallery or import a PDF scan.",
+        "alt": "The three ways to send a document"
+      },
+      "echeances": {
+        "titre": "Your deadlines",
+        "detail": "What is due, what is overdue, and how to pay it.",
+        "alt": "The member's tax and social deadlines"
+      },
+      "documents": {
+        "titre": "Your documents",
+        "detail": "The filing receipts obtained by the firm, to show the administration.",
+        "alt": "Documents filed by the firm"
+      }
+    },
+    "questions": {
+      "titre": "Frequently asked questions",
+      "compte": {
+        "q": "Do I need a separate account?",
+        "r": "No: these are your client area credentials. You receive them by email as soon as your membership is paid."
+      },
+      "iphone": {
+        "q": "Is it available on iPhone?",
+        "r": "Not yet: it is first offered on Android. On iPhone, your client area opens in the browser, with the same features."
+      },
+      "reseau": {
+        "q": "What about without a network?",
+        "r": "What you have already viewed stays readable, with the time of its last update. A document photographed offline waits on the phone and leaves as soon as the network is back."
+      },
+      "donnees": {
+        "q": "Is my data protected?",
+        "r": "It travels encrypted between your phone and the firm, and is visible only to your company and the team handling your file."
+      }
+    }
   }
 }

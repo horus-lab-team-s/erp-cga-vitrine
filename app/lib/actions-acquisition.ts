@@ -51,7 +51,34 @@ type AccuseDeDemande = {
   recue: boolean;
   canal_de_rappel: "APPEL" | "WHATSAPP" | "COURRIEL";
   message: string;
+  jeton_de_pieces?: string | null;
 };
+
+/**
+ * ⚠️ Ce qui arrive ici vient du navigateur : rien n'y est garanti. On ne garde
+ * que des textes courts, en nombre borné. Le serveur du cabinet reste juge de
+ * ce qu'il verse à la qualification ; ce filtre évite seulement qu'une demande
+ * légitime soit refusée entière pour un champ démesuré.
+ */
+function declarationsPropres(brutes: unknown): Record<string, string> {
+  if (!brutes || typeof brutes !== "object") return {};
+  const propres: Record<string, string> = {};
+  for (const [code, valeur] of Object.entries(brutes as Record<string, unknown>).slice(0, 40)) {
+    const texte = typeof valeur === "string" ? valeur.trim().slice(0, 300) : "";
+    if (texte && code.length <= 60) propres[code] = texte;
+  }
+  return propres;
+}
+
+/**
+ * Le texte de la case WhatsApp du site, tel que `messages/<langue>/vitrine.json` le
+ * porte sous `demande.consentementWhatsapp`, au 14 octobre 2026.
+ *
+ * ⚠️ À CHANGER EN MÊME TEMPS QUE LA PHRASE. Le cabinet doit pouvoir prouver ce
+ * que chaque client a accepté ; une phrase retouchée sous la même version
+ * rendrait cette preuve fausse pour tous ceux qui ont coché l'ancienne.
+ */
+const VERSION_DU_TEXTE_WHATSAPP = "consentement-whatsapp-site-v1";
 
 export async function deposerUneDemande(demande: DemandeSoumise): Promise<ResultatDemande> {
   const nom = String(demande?.nom ?? "").trim();
@@ -85,11 +112,21 @@ export async function deposerUneDemande(demande: DemandeSoumise): Promise<Result
         service_souhaite: demande.demarche,
         message: message || null,
         canal_prefere: "APPEL",
-        consentement_whatsapp: false,
+        // ⚠️ Vrai SEULEMENT si le visiteur a coché la case qui le dit en toutes
+        // lettres. La version nomme le texte qu'il a lu sur le site : si la
+        // phrase change, la version change, et l'on sait toujours à quoi chacun
+        // a consenti.
+        consentement_whatsapp: demande.consentementWhatsapp === true,
+        ...(demande.consentementWhatsapp === true ? { version_du_texte: VERSION_DU_TEXTE_WHATSAPP } : {}),
         origine: String(demande.origine ?? "vitrine").slice(0, 40),
+        declarations: declarationsPropres(demande.declarations),
       },
     });
-    return { enregistree: true, canalDeRappel: accuse.canal_de_rappel };
+    return {
+      enregistree: true,
+      canalDeRappel: accuse.canal_de_rappel,
+      jetonDePieces: accuse.jeton_de_pieces ?? null,
+    };
   } catch (erreur) {
     // ⚠️ Le motif du backend est rendu tel quel : « +33612345678 n'est pas un
     // numéro camerounais exploitable » dit au visiteur quoi corriger, « une erreur
@@ -101,6 +138,43 @@ export async function deposerUneDemande(demande: DemandeSoumise): Promise<Result
           ? erreur.message
           : "Le service d'enregistrement est momentanément indisponible.",
     };
+  }
+}
+
+/** Ce que le bloc des pièces jointes affiche : la dernière erreur, et ce qui est parti. */
+export type EtatDesPiecesJointes = { echec: string | null; recues: string[] };
+
+/**
+ * Joint une pièce à la demande qu'on vient de déposer (19 octobre 2026, point 22).
+ *
+ * ⚠️ Le jeton vient de l'accusé : il est opaque, et ne vaut que pour cette demande.
+ * Aucune vérification de type ni de taille ici : le serveur les fait (voir
+ * `DepotDePiece`, même raisonnement).
+ */
+export async function joindreUnePieceALaDemande(
+  precedent: EtatDesPiecesJointes,
+  donnees: FormData,
+): Promise<EtatDesPiecesJointes> {
+  const recues = precedent.recues;
+  const jeton = String(donnees.get("jeton") ?? "").trim();
+  const fichier = donnees.get("fichier");
+  if (!jeton) return { echec: "Rechargez la page, puis renvoyez votre demande.", recues };
+  if (!(fichier instanceof File) || fichier.size === 0) {
+    return { echec: "Choisissez un document à joindre.", recues };
+  }
+  const envoi = new FormData();
+  envoi.append("jeton", jeton);
+  envoi.append("fichier", fichier);
+  try {
+    const recue = await appeler<{ nom: string; pieces: number }>("/acquisition/demandes/pieces", {
+      methode: "POST",
+      formulaire: envoi,
+    });
+    const texte = `« ${recue.nom} » est jointe à votre demande (${recue.pieces} pièce${recue.pieces > 1 ? "s" : ""}).`;
+    return { echec: null, recues: [...recues, texte] };
+  } catch (erreur) {
+    if (erreur instanceof ErreurApi && erreur.statut !== null) return { echec: erreur.message, recues };
+    return { echec: "L'envoi n'a pas abouti : réessayez dans un instant.", recues };
   }
 }
 
@@ -359,13 +433,70 @@ export async function accepterLaProforma(_precedent: EtatActe, donnees: FormData
         identite_declaree: identite,
       },
     });
-    return { echec: null, fait: "Votre accord est enregistré. Le cabinet revient vers vous pour le règlement." };
+    // ⚠️ La page se relit : l'accord donné, elle propose aussitôt le règlement à la
+    // place du formulaire. Sans cela la cliente lisait « accord enregistré » et
+    // devait recharger pour découvrir qu'elle pouvait payer.
+    revalidatePath("/[locale]/proforma/[numero]", "page");
+    return { echec: null, fait: "Votre accord est enregistré. Vous pouvez régler ci-dessous, ou au cabinet." };
   } catch (erreur) {
     if (erreur instanceof ErreurApi) return { echec: erreur.message, fait: null };
     throw erreur;
   }
 }
 
+
+export type EtatPaiementEnLigne = { echec: string | null; fait: string | null; simule: boolean };
+
+/**
+ * Le client demande le débit de sa proposition acceptée sur son mobile money.
+ *
+ * ⚠️ **N'ENCAISSE RIEN.** Le serveur répond « la demande est partie », pas « vous
+ * avez payé » : la cliente doit encore saisir son code. Le règlement est constaté
+ * par la notification de l'opérateur, et la page le relit.
+ *
+ * ⚠️ Le sceau du lien personnel voyage avec la demande, et c'est le serveur du
+ * cabinet qui le vérifie : cette action est joignable par un POST direct, elle ne
+ * protège donc rien par elle-même.
+ */
+export async function payerEnLigne(
+  _precedent: EtatPaiementEnLigne,
+  donnees: FormData,
+): Promise<EtatPaiementEnLigne> {
+  const numero = String(donnees.get("numero") ?? "").trim();
+  const telephone = String(donnees.get("telephone") ?? "").trim();
+  try {
+    const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean }>(
+      `/acquisition/proformas/${encodeURIComponent(numero)}/paiement-en-ligne`,
+      {
+        methode: "POST",
+        corps: {
+          version: Number(donnees.get("version")),
+          expire_le: String(donnees.get("expire_le") ?? ""),
+          sceau: String(donnees.get("sceau") ?? ""),
+          telephone,
+        },
+      },
+    );
+    if (!reponse.accepte) {
+      return { echec: `L'opérateur n'a pas accepté la demande : ${reponse.message}`, fait: null, simule: false };
+    }
+    return reponse.simule
+      ? {
+          echec: null,
+          simule: true,
+          fait:
+            "Le paiement en ligne n'est pas encore branché sur l'opérateur : aucune demande n'a été envoyée sur votre téléphone. Réglez au cabinet, en espèces ou par virement.",
+        }
+      : {
+          echec: null,
+          simule: false,
+          fait: `Une demande de paiement est partie sur le numéro ${reponse.telephone}. Validez-la avec votre code : cette page se mettra à jour toute seule.`,
+        };
+  } catch (erreur) {
+    if (erreur instanceof ErreurApi) return { echec: erreur.message, fait: null, simule: false };
+    throw erreur;
+  }
+}
 
 // ══ Le règlement (pas 68) ════════════════════════════════════════════════════
 

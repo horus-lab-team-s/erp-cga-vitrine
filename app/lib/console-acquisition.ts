@@ -193,6 +193,23 @@ export type ProformaConsultee = {
   debours: { libelle: string; montant: string }[];
   expire_le: string;
   acceptee: boolean;
+  /** Le règlement est constaté, quel qu'en soit le chemin. */
+  payee?: boolean;
+  /** Le client peut régler en ligne depuis cette page. */
+  reglable_en_ligne?: boolean;
+  /**
+   * Les rubriques du document reçu, avec leur sous-total (14 octobre 2026).
+   *
+   * ⚠️ Quand elles existent, `lignes` est vide : le calcul du barème ne totalise
+   * pas le montant du document, et la page montrait deux explications du même
+   * prix qui se contredisaient.
+   */
+  rubriques?: {
+    numero: string;
+    intitule: string;
+    lignes: { libelle: string; montant: string }[];
+    sous_total: string;
+  }[];
 };
 
 /** L'état des canaux de contact (pas 90) : ceux que le centre exploite, et pourquoi les autres ne le sont pas. */

@@ -54,6 +54,9 @@ const nextConfig: NextConfig = {
         source: "/:chemin*",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
+          // 19 octobre 2026 (audit) : le navigateur n'accepte plus que HTTPS pour ce
+          // domaine pendant un an. Ignoré sur une réponse en clair, donc sans effet local.
+          { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
@@ -101,6 +104,15 @@ const nextConfig: NextConfig = {
   //
   // À retirer quand le correctif sera livré (prévu pour 16.4).
   output: process.env.VERCEL ? undefined : "standalone",
+  // 20 octobre 2026 (temps de chargement) : les images optimisées se gardaient quatre
+  // heures ; un mois désormais, et une seconde visite ne retélécharge plus l'accueil.
+  // ⚠️ L'adresse d'une image optimisée ne dépend que de son chemin : une photographie
+  // REMPLACÉE doit changer de nom de fichier, sans quoi un visiteur garde l'ancienne un
+  // mois. `qualities` autorise le 70 du héros, que Next ramènerait sinon à 75.
+  images: {
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+    qualities: [70, 75],
+  },
 
   // Le traçage prend le dossier du projet pour racine et ignore tout ce qui est
   // au-dessus. C'est désormais ce qu'il faut : les dépendances de ce dépôt sont

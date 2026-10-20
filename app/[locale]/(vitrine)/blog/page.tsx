@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { RUBRIQUES, type Article, type CleRubrique } from "@/app/lib/blog";
 import { lireSommaire } from "@/app/lib/contenu-vitrine";
@@ -16,6 +17,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "vitrine.blog" });
   return {
+    alternates: alternatives(locale, "/blog"),
     title: t("titre"),
     description: t("detail"),
     openGraph: {
