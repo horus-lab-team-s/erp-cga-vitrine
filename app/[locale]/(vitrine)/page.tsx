@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EtapesProgression } from "@/app/components/vitrine/EtapesProgression";
 import { Heros } from "@/app/components/vitrine/Heros";
@@ -20,6 +21,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "vitrine" });
   return {
+    alternates: alternatives(locale, "/"),
     title: t("heros.slide1.titre"),
     description: t("services.detail"),
   };

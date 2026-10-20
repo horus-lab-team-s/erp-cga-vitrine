@@ -19,3 +19,32 @@ export const SITE_URL = (
 export function adresseAbsolue(chemin: string): string {
   return `${SITE_URL}${chemin.startsWith("/") ? chemin : `/${chemin}`}`;
 }
+
+/**
+ * L'adresse publique d'une page dans une langue (20 octobre 2026, audit du référencement).
+ *
+ * ⚠️ Le français, langue par défaut, n'a PAS de préfixe (`localePrefix: "as-needed"`) :
+ * `/fr/contact` redirige vers `/contact`. Annoncer aux moteurs une adresse qui redirige
+ * leur fait indexer la redirection, ou rien.
+ */
+export function adressePublique(langue: string, chemin: string): string {
+  const suite = chemin === "/" ? "" : chemin;
+  return langue === "fr" ? `${SITE_URL}${suite || "/"}` : `${SITE_URL}/${langue}${suite}`;
+}
+
+/**
+ * L'adresse canonique de la page, et ses équivalents dans l'autre langue.
+ *
+ * Sans eux, la page française et la page anglaise passent pour deux pages en
+ * concurrence, et le moteur n'en garde qu'une, pas toujours la bonne.
+ */
+export function alternatives(langue: string, chemin: string) {
+  return {
+    canonical: adressePublique(langue, chemin),
+    languages: {
+      fr: adressePublique("fr", chemin),
+      en: adressePublique("en", chemin),
+      "x-default": adressePublique("fr", chemin),
+    },
+  };
+}

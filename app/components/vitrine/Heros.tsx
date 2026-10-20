@@ -46,19 +46,34 @@ export function Heros() {
   const chiffres = useTranslations("vitrine.chiffres");
   const [index, setIndex] = useState(0);
   const [enPause, setEnPause] = useState(false);
+  // ⚠️ 20 octobre 2026 : les vues suivantes ne se montent qu'une fois la page chargée.
+  // Superposées en transparence, elles étaient toutes « visibles » pour le navigateur,
+  // qui téléchargeait les trois photographies d'un coup (près de 400 Ko) avant d'avoir
+  // fini la première : sur une connexion lente, c'est tout l'écran qui attendait.
+  const [suivantes, setSuivantes] = useState(false);
+  useEffect(() => {
+    const monter = () => setSuivantes(true);
+    if (document.readyState === "complete") {
+      const id = window.setTimeout(monter, 1200);
+      return () => window.clearTimeout(id);
+    }
+    const apresChargement = () => window.setTimeout(monter, 1200);
+    window.addEventListener("load", apresChargement, { once: true });
+    return () => window.removeEventListener("load", apresChargement);
+  }, []);
 
   // `index` fait partie des dépendances : choisir une vue à la main relance le
   // décompte au lieu de la remplacer aussitôt par la suivante.
   useEffect(() => {
-    if (enPause) return;
+    if (enPause || !suivantes) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const minuterie = window.setTimeout(() => setIndex((i) => (i + 1) % VUES.length), CADENCE);
     return () => window.clearTimeout(minuterie);
-  }, [enPause, index]);
+  }, [enPause, index, suivantes]);
 
   return (
     <section className="heros" aria-roledescription="carrousel">
-      {/* Les trois vues sont montées en permanence et se fondent l'une dans
+      {/* Les trois vues, une fois montées, le restent et se fondent l'une dans
           l'autre : les recharger à chaque passage ferait clignoter le fond sur
           connexion lente. */}
       {VUES.map((vue, i) => (
@@ -68,14 +83,17 @@ export function Heros() {
           style={{ opacity: i === index ? 1 : 0, zIndex: i === index ? 2 : 1 }}
           aria-hidden={i !== index}
         >
-          <Image
-            src={vue.image}
-            alt=""
-            fill
-            priority={i === 0}
-            sizes="100vw"
-            className="heros__image"
-          />
+          {(i === 0 || suivantes) && (
+            <Image
+              src={vue.image}
+              alt=""
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              quality={70}
+              className="heros__image"
+            />
+          )}
           <div className="heros__voile" />
         </div>
       ))}

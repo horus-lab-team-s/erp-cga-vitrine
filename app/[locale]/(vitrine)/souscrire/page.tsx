@@ -5,12 +5,21 @@ import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { FormulaireSouscription } from "@/app/components/vitrine/FormulaireSouscription";
 import { montantFcfa } from "@/app/lib/formats";
 import { aujourdhui } from "@/app/lib/portefeuille";
+import { alternatives } from "@/app/lib/site";
 import { lireCatalogue, type Service, type Tarif } from "@/app/lib/souscription";
 
-export const metadata: Metadata = {
-  title: "Souscrire en ligne",
-  description: "Établir un devis au barème du jour et souscrire par Mobile Money.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "Souscrire en ligne",
+    description: "Établir un devis au barème du jour et souscrire par Mobile Money.",
+    alternates: alternatives(locale, "/souscrire"),
+  };
+}
 export const dynamic = "force-dynamic";
 
 /**

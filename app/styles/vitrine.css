@@ -5024,3 +5024,91 @@
     border-radius: 20px;
   }
 }
+
+/* ── Pied de page resserré (20 octobre 2026) ───────────────────────────────
+   Mesuré avant : 446 px sur ordinateur, 1 620 px sur téléphone, soit deux écrans
+   entiers à faire défiler pour atteindre les mentions légales. Sous 480 px, les
+   colonnes de liens passaient sur une seule colonne, et chaque lien gardait 44 px
+   de hauteur. Les colonnes restent désormais deux par rangée jusqu'au plus petit
+   écran, et la cible tactile tient à 36 px : sous le minimum de 44 px des guides,
+   mais séparée de ses voisines sans recouvrement, sur des liens de texte courts. */
+.pied-vitrine {
+  padding-block: 36px 18px;
+}
+
+.pied-vitrine__grille {
+  gap: 24px 28px;
+}
+
+.pied-vitrine__titre {
+  margin-bottom: 8px;
+}
+
+.pied-vitrine__liste {
+  gap: 6px;
+}
+
+.pied-vitrine__bas {
+  margin-top: 24px;
+  padding-top: 14px;
+}
+
+.pied-vitrine__signature {
+  margin-top: 10px;
+}
+
+@media (max-width: 720px) {
+  .pied-vitrine {
+    padding-block: 26px 14px;
+  }
+
+  /* Les trois groupes de liens côte à côte, l'identité du cabinet au-dessus : sur deux
+     colonnes, le troisième groupe partait seul sur une rangée de plus. */
+  .pied-vitrine__grille {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px 12px;
+  }
+
+  .pied-vitrine__grille > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .pied-vitrine__description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 10px;
+    font-size: 12.5px;
+  }
+
+  .pied-vitrine__liste {
+    gap: 0;
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+
+  .pied-vitrine__liste a {
+    min-height: 34px;
+  }
+
+  .pied-vitrine__titre {
+    margin-bottom: 2px;
+    font-size: 11px;
+  }
+
+  .reseaux__lien {
+    min-height: 40px;
+  }
+
+  .pied-vitrine__bas {
+    margin-top: 16px;
+    padding-top: 10px;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .pied-vitrine__bas span:last-child {
+    gap: 4px 14px !important;
+  }
+}

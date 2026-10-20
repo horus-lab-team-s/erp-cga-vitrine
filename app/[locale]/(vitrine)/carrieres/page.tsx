@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { lireLesOffres, type OffreDePoste } from "@/app/lib/carrieres";
@@ -12,7 +13,8 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.carrieres" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/carrieres"), title: t("titre"), description: t("detail") };
 }
 
 /**

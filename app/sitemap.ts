@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { articlesTries } from "@/app/lib/blog";
 import { FICHES_SERVICE } from "@/app/lib/services-vitrine";
-import { SITE_URL } from "@/app/lib/site";
+import { adressePublique } from "@/app/lib/site";
 import { routing } from "@/i18n/routing";
 
 /**
@@ -59,14 +59,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ];
 
+  // ⚠️ 20 octobre 2026 : le français sans `/fr`, qui redirige. Voir `adressePublique`.
   return pages.map(({ chemin, priorite, frequence }) => ({
-    url: `${SITE_URL}/${routing.defaultLocale}${chemin}`,
+    url: adressePublique(routing.defaultLocale, chemin || "/"),
     lastModified: maintenant,
     changeFrequency: frequence,
     priority: priorite,
     alternates: {
       languages: Object.fromEntries(
-        routing.locales.map((langue) => [langue, `${SITE_URL}/${langue}${chemin}`]),
+        routing.locales.map((langue) => [langue, adressePublique(langue, chemin || "/")]),
       ),
     },
   }));

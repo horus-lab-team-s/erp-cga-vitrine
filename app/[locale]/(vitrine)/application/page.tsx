@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { IconeVitrine } from "@/app/components/vitrine/IconeVitrine";
@@ -17,7 +18,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.application" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/application"), title: t("titre"), description: t("detail") };
 }
 
 /**

@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { FormulaireService } from "@/app/components/vitrine/FormulaireService";
@@ -17,7 +18,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.creation" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/creer-mon-entreprise"), title: t("titre"), description: t("detail") };
 }
 
 /**
