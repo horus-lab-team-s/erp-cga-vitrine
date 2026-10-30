@@ -994,6 +994,16 @@
         "installer": "Install the app on your Android phone.",
         "connecter": "Sign in with your client area email and password.",
         "deposer": "Send your first document: it reaches the firm within a minute."
+      },
+      "taille": "({mo} MB)",
+      "wifi": "Preferably over Wi-Fi.",
+      "autresVersions": "Other versions and file check",
+      "invalide": "If Android says “package appears to be invalid”, the download was interrupted: delete the file from your Downloads and download it again. The button picks your phone's version; if in doubt, take the universal version.",
+      "empreinte": "File fingerprint, to check it is complete",
+      "roles": {
+        "arm64": "Recent phone (64-bit)",
+        "armv7": "Entry-level phone (32-bit)",
+        "universel": "Universal version, for every phone"
       }
     },
     "ecrans": {

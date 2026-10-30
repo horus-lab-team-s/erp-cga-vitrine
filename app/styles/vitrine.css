@@ -4912,6 +4912,37 @@
   color: var(--ink-500);
 }
 
+.application__taille {
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.application__versions {
+  flex-basis: 100%;
+  font-size: 13px;
+  color: var(--ink-500);
+}
+
+.application__versions summary {
+  cursor: pointer;
+  color: var(--brand-indigo-900);
+  font-weight: 600;
+}
+
+.application__versions ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.application__versions code {
+  display: block;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  color: var(--ink-500);
+}
+
 .application__attente {
   margin-top: 26px;
   display: grid;

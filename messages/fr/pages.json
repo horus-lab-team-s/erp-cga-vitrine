@@ -994,6 +994,16 @@
         "installer": "Installez l'application sur votre téléphone Android.",
         "connecter": "Connectez-vous avec l'adresse et le mot de passe de votre espace client.",
         "deposer": "Déposez votre première pièce : elle arrive au cabinet dans la minute."
+      },
+      "taille": "({mo} Mo)",
+      "wifi": "De préférence en Wi-Fi.",
+      "autresVersions": "Autres versions et vérification du fichier",
+      "invalide": "Si Android affiche « paquet non valide », le téléchargement a été interrompu : supprimez le fichier de vos Téléchargements et téléchargez-le de nouveau. Le bouton choisit la version de votre téléphone ; en cas de doute, prenez la version universelle.",
+      "empreinte": "Empreinte du fichier, pour vérifier qu'il est complet",
+      "roles": {
+        "arm64": "Téléphone récent (64 bits)",
+        "armv7": "Téléphone d'entrée de gamme (32 bits)",
+        "universel": "Version universelle, pour tous les téléphones"
       }
     },
     "ecrans": {
