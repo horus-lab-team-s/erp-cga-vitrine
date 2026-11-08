@@ -132,6 +132,8 @@ export type QuestionAuVisiteur = {
   valeurs: { valeur: string; libelle: string }[];
   unite: string | null;
   aide: string;
+  /** 8 novembre 2026 : vide, ou `LOCALISATION` (la cascade région › … › quartier). */
+  saisie?: "" | "LOCALISATION" | string;
 };
 
 /**

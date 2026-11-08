@@ -5,8 +5,10 @@ import { useTranslations } from "next-intl";
 
 import { deposerUneDemande } from "@/app/lib/actions-acquisition";
 import type { Demarche, QuestionAuVisiteur, ResultatDemande } from "@/app/lib/acquisition";
+import { CHAMPS_DE_LA_LOCALISATION } from "@/app/lib/geographie";
 
 import { IconeVitrine } from "./IconeVitrine";
+import { LocalisationDuSiege } from "./LocalisationDuSiege";
 import { PiecesDeLaDemande } from "./PiecesDeLaDemande";
 
 /**
@@ -136,8 +138,23 @@ export function FormulaireService({
   });
   const declarer = (code: string, valeur: string) =>
     setDeclarations((avant) => ({ ...avant, [code]: valeur }));
+  /* 8 novembre 2026 : une question en saisie LOCALISATION remplit aussi la région, la ville et
+     le quartier. Ces trois-là ne sont donc pas posées une seconde fois. */
+  const avecLocalisation = questions.some((q) => q.saisie === "LOCALISATION");
+  const questionsPosees = avecLocalisation
+    ? questions.filter(
+        (q) => !(CHAMPS_DE_LA_LOCALISATION as readonly string[]).includes(q.code),
+      )
+    : questions;
   /** La réponse telle que le visiteur la relira : le nom d'un choix, pas son code. */
   const reponseLisible = (question: QuestionAuVisiteur) => {
+    if (question.saisie === "LOCALISATION") {
+      const lieu = [declarations.quartier_siege, declarations.ville_siege]
+        .map((x) => (x ?? "").trim())
+        .filter(Boolean)
+        .join(", ");
+      return lieu || null;
+    }
     const brute = (declarations[question.code] ?? "").trim();
     if (!brute) return null;
     if (question.type === "BOOLEEN") return brute === "oui" ? t("oui") : t("non");
@@ -163,7 +180,7 @@ export function FormulaireService({
       forme && !demandeLaForme ? `${t("champForme")} : ${nomsFormes(forme)}` : null,
       // Les réponses du projet partent aussi par courriel et par WhatsApp : un
       // visiteur qui choisit ces canaux ne doit pas les avoir remplies pour rien.
-      ...questions.map((q) => {
+      ...questionsPosees.map((q) => {
         const reponse = reponseLisible(q);
         return reponse ? `${q.libelle} ${reponse}` : null;
       }),
@@ -195,7 +212,7 @@ export function FormulaireService({
       message: [sujet, forme && !demandeLaForme ? nomsFormes(forme) : null, message]
         .filter(Boolean)
         .join("\n"),
-      declarations,
+      declarations: avecLeSiege(declarations),
       consentementContact: consent,
       consentementWhatsapp: accordWhatsapp,
       origine: `vitrine-${demarche.toLowerCase()}`,
@@ -344,7 +361,19 @@ export function FormulaireService({
           <legend className="formulaire-service__projet-titre">{t("projetTitre")}</legend>
           <p className="formulaire-service__projet-detail">{t("projetDetail")}</p>
           <div className="formulaire-service__paire">
-            {questions.map((question) => {
+            {questionsPosees.map((question) => {
+              if (question.saisie === "LOCALISATION") {
+                return (
+                  <div key={question.code} className="formulaire-service__pleine-largeur">
+                    <LocalisationDuSiege
+                      libelle={question.libelle}
+                      aide={question.aide}
+                      valeurs={declarations}
+                      declarer={declarer}
+                    />
+                  </div>
+                );
+              }
               const id = `declaration-${question.code}`;
               const valeur = declarations[question.code] ?? "";
               const numerique = question.type === "ENTIER" || question.type === "DECIMAL";
@@ -487,4 +516,19 @@ export function FormulaireService({
     )}
     </>
   );
+}
+
+/**
+ * L'adresse du siège, déduite du quartier et de la ville quand le visiteur ne l'a pas écrite.
+ *
+ * ⚠️ Le dossier de formalité ne s'ouvre pas sans `siege` (voir `FAITS_REQUIS` au serveur) :
+ * « Bonapriso, Douala » suffit à l'ouvrir, la rue se complète à la constitution.
+ */
+function avecLeSiege(declarations: Record<string, string>): Record<string, string> {
+  if ((declarations.siege ?? "").trim()) return declarations;
+  const lieu = [declarations.quartier_siege, declarations.ville_siege]
+    .map((x) => (x ?? "").trim())
+    .filter(Boolean)
+    .join(", ");
+  return lieu ? { ...declarations, siege: lieu } : declarations;
 }

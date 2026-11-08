@@ -305,6 +305,21 @@
       "reussi": "Votre demande est enregistrée : un responsable du cabinet vous rappelle au numéro indiqué.",
       "echec": "Votre demande n'a pas pu être enregistrée ({motif}). Votre message WhatsApp reste le moyen de nous joindre.",
       "indisponible": "le service d'enregistrement ne répond pas"
+    },
+    "localisation": {
+      "chargement": "Chargement des régions…",
+      "indisponible": "La liste des lieux est momentanément indisponible : écrivez la ville et le quartier.",
+      "choisir": "Choisir…",
+      "region": "Région",
+      "departement": "Département",
+      "arrondissement": "Arrondissement",
+      "ville": "Ville ou localité",
+      "villes": "Villes",
+      "localites": "Villages et localités",
+      "autreVille": "Autre ville ou localité…",
+      "quartier": "Quartier",
+      "autreQuartier": "Autre quartier…",
+      "quartierPartiel": "Votre quartier n'est pas dans la liste ? Choisissez « Autre quartier » et écrivez-le."
     }
   }
 }

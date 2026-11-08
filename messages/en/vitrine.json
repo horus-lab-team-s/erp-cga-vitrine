@@ -305,6 +305,21 @@
       "reussi": "Your request is recorded: a member of the firm will call you back on the number given.",
       "echec": "Your request could not be recorded ({motif}). Your WhatsApp message remains the way to reach us.",
       "indisponible": "the recording service is not responding"
+    },
+    "localisation": {
+      "chargement": "Loading regions…",
+      "indisponible": "The list of places is temporarily unavailable: type the town and the neighbourhood.",
+      "choisir": "Choose…",
+      "region": "Region",
+      "departement": "Division",
+      "arrondissement": "Subdivision",
+      "ville": "Town or locality",
+      "villes": "Towns",
+      "localites": "Villages and localities",
+      "autreVille": "Other town or locality…",
+      "quartier": "Neighbourhood",
+      "autreQuartier": "Other neighbourhood…",
+      "quartierPartiel": "Your neighbourhood is not listed? Choose “Other neighbourhood” and type it."
     }
   }
 }

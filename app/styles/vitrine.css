@@ -3896,6 +3896,18 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+/* 8 novembre 2026 : la localisation (région › … › quartier) prend toute la ligne. */
+.formulaire-service__pleine-largeur {
+  grid-column: 1 / -1;
+}
+
+.localisation-du-siege {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
 .formulaire-service__consentement {
   display: flex;
   align-items: flex-start;
