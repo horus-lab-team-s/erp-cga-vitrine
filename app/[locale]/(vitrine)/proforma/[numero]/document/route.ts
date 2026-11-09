@@ -66,7 +66,8 @@ export async function GET(
   return new Response(reponse.body, {
     headers: {
       "content-type": "application/pdf",
-      "content-disposition": `inline; filename="proforma-${numero}.pdf"`,
+      // 9 novembre 2026 : « Télécharger » enregistre le fichier ; « Lire » l'ouvre.
+      "content-disposition": `${entrant.get("telecharger") === "1" ? "attachment" : "inline"}; filename="proforma-${numero}.pdf"`,
       "x-content-type-options": "nosniff",
       "cache-control": "private, no-store",
     },

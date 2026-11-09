@@ -108,10 +108,27 @@ export default async function PageProforma({
   }
 
   const ouverte = !lecture.acceptee && lecture.etat !== "REMPLACEE" && lecture.etat !== "ANNULEE";
+  const lienDuDocument = `/fr/proforma/${encodeURIComponent(lecture.numero)}/document?v=${v}&e=${encodeURIComponent(e)}&s=${encodeURIComponent(s)}`;
+  const cabinet = lecture.cabinet;
   return (
     <main className="proforma">
       <section className="bloc proforma__bloc">
         <div className="proforma__carte">
+          {/* 9 novembre 2026 : l'en-tête du document, comme sur la proforma imprimée. */}
+          {cabinet && (
+            <header className="proforma__entete">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/marque/cga-logo-couleur.jpg" alt="" width={96} height={54} className="proforma__logo" />
+              <div className="proforma__maison">
+                <strong>{cabinet.raison_sociale}</strong>
+                <span>{cabinet.activite}</span>
+              </div>
+              <div className="proforma__contact">
+                <span>{cabinet.site}</span>
+                <span>{cabinet.courriel}</span>
+              </div>
+            </header>
+          )}
           <p className="proforma__surtitre">Proposition {lecture.numero}</p>
           <h1 className="proforma__titre">{libelleDuService(lecture.service)}</h1>
           <p className="proforma__montant">{francs(lecture.montant)}</p>
@@ -190,16 +207,22 @@ export default async function PageProforma({
           Le lien passe par le relais du site : l'adresse de l'API est interne,
           et le navigateur ne la connaît pas.
         */}
-        <p className="proforma__document">
-          <a
-            className="bouton bouton--secondaire"
-            href={`/fr/proforma/${encodeURIComponent(lecture.numero)}/document?v=${v}&e=${encodeURIComponent(e)}&s=${encodeURIComponent(s)}`}
-            target="_blank"
-            rel="noopener"
-          >
-            Lire la proforma détaillée
-          </a>
-        </p>
+        {lecture.document_disponible !== false ? (
+          <p className="proforma__document">
+            <a className="bouton bouton--secondaire" href={lienDuDocument} target="_blank" rel="noopener">
+              Lire la proforma détaillée
+            </a>
+            {/* 9 novembre 2026 : la garder, l'imprimer, la transmettre à sa banque. */}
+            <a className="bouton bouton--secondaire" href={`${lienDuDocument}&telecharger=1`} download>
+              Télécharger la proforma (PDF)
+            </a>
+          </p>
+        ) : (
+          <p className="proforma__texte proforma__document">
+            Le cabinet vous a transmis le montant, sans document détaillé. Pour recevoir la proforma en PDF,
+            répondez à son message.
+          </p>
+        )}
 
         <div className="proforma__carte">
           {lecture.payee ? (
@@ -280,6 +303,15 @@ export default async function PageProforma({
           Une question avant de valider ? Répondez au message du cabinet, ou{" "}
           <a href={whatsappDuCabinet}>écrivez-nous sur WhatsApp</a>.
         </p>
+
+        {/* 9 novembre 2026 : le pied du document : coordonnées, implantations, agrément. */}
+        {cabinet && cabinet.pied.length > 0 && (
+          <footer className="proforma__pied">
+            {cabinet.pied.map((ligne) => (
+              <p key={ligne}>{ligne}</p>
+            ))}
+          </footer>
+        )}
       </section>
     </main>
   );

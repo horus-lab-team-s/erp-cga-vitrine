@@ -207,6 +207,19 @@ export type ProformaConsultee = {
   reste?: string | null;
   engage?: boolean;
   /**
+   * 9 novembre 2026 : l'en-tête et le pied du document, lus au référentiel du serveur
+   * (`cabinet/identite_des_documents.yaml`) : la page porte la même identité que le PDF.
+   */
+  /** 9 novembre 2026 : un PDF existe ; sans lui, ni « Lire » ni « Télécharger ». */
+  document_disponible?: boolean;
+  cabinet?: {
+    raison_sociale: string;
+    activite: string;
+    site: string;
+    courriel: string;
+    pied: string[];
+  } | null;
+  /**
    * Les rubriques du document reçu, avec leur sous-total (14 octobre 2026).
    *
    * ⚠️ Quand elles existent, `lignes` est vide : le calcul du barème ne totalise
