@@ -241,6 +241,9 @@ export function FormulaireService({
     // Un rendez-vous sans créneau ne part pas : le bouton le dit, le serveur le refuserait.
     if (enRendezVous && !rdvDebut) return;
     enregistrer();
+    // Un rendez-vous ne passe que par l'enregistrement : la messagerie n'a rien à y ajouter,
+    // et lui demander d'« envoyer le message » le ferait douter de sa réservation.
+    if (enRendezVous) return;
     const objet = encodeURIComponent(t("objet", { sujet }));
     window.location.href = `mailto:${DESTINATAIRE}?subject=${objet}&body=${encodeURIComponent(corps())}`;
     setEnvoye(true);
