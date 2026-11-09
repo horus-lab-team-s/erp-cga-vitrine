@@ -320,6 +320,27 @@
       "quartier": "Neighbourhood",
       "autreQuartier": "Other neighbourhood…",
       "quartierPartiel": "Your neighbourhood is not listed? Choose “Other neighbourhood” and type it."
+    },
+    "parcours": {
+      "titre": "How would you like to proceed?",
+      "formulaire": "I fill in the form",
+      "formulaireDetail": "You know your project: legal form, activities, office. Allow ten minutes.",
+      "rendezVous": "I prefer an appointment",
+      "rendezVousDetail": "An adviser fills in the file with you, at the firm or online. The file fee is the same.",
+      "mode": "Where is the appointment held?",
+      "presentiel": "At the firm",
+      "enLigne": "Online (video call)",
+      "creneau": "Choose a time slot",
+      "chargement": "Reading the time slots…",
+      "aucun": "No slot is free right now: call the firm, or fill in the form.",
+      "indisponible": "The time slots cannot be read right now: try again shortly, or call the firm.",
+      "courrielRequis": "Your email address is required: the confirmation and your file code are sent there.",
+      "penalite": "A missed appointment without notice is penalised: let the firm know if you cannot come.",
+      "dejaPaye": "I already have a file code (appointment booked, or file fee already paid)",
+      "code": "Your file code",
+      "codeAide": "It is in the firm's email, in the form K7M4-Q2XP. Fees already paid are found and deducted.",
+      "rdvConfirme": "Your appointment is booked: {quand}. The confirmation and your file code are sent to your email address.",
+      "rattachee": "Your request is added to your file. File fee already paid: {montant} FCFA, deducted from your quote."
     }
   }
 }

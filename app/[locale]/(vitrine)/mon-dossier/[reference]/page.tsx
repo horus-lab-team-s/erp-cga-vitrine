@@ -81,9 +81,13 @@ export default async function PageMonDossier({
   // ⚠️ L'étape ne contredit pas les numéros : voir `positionDansLaCreation`.
   const position = positionDansLaCreation(lecture.etape, lecture.identifiants.immatriculee);
   const etape = ETAPES_DE_CREATION[position.courante];
-  const attendues = lecture.pieces.filter((p) => p.obligatoire);
+  // 9 novembre 2026 : l'entreprise n'existe pas encore. Ce qui se prépare avec le cabinet
+  // (statuts signés, bail au nom de la société…) n'est pas compté comme « à fournir ».
+  const plusTard = (p: { moment?: string }) => p.moment === "CONSTITUTION";
+  const attendues = lecture.pieces.filter((p) => p.obligatoire && !plusTard(p));
   const recues = attendues.filter((p) => p.fournie).length;
-  const manquantes = lecture.pieces.filter((p) => !p.fournie);
+  const manquantes = lecture.pieces.filter((p) => !p.fournie && !plusTard(p));
+  const aConstituer = lecture.pieces.filter((p) => !p.fournie && plusTard(p));
   const fournies = lecture.pieces.filter((p) => p.fournie);
 
   return (
@@ -201,7 +205,7 @@ export default async function PageMonDossier({
                 <strong>
                   {recues} sur {attendues.length}
                 </strong>{" "}
-                documents nécessaires reçus
+                documents à fournir maintenant reçus
               </p>
               <progress className="suivi__jauge" max={attendues.length} value={recues}>
                 {recues} sur {attendues.length}
@@ -226,6 +230,28 @@ export default async function PageMonDossier({
                 </li>
               ))}
             </ul>
+          )}
+
+          {!lecture.clos && aConstituer.length > 0 && (
+            <>
+              <h3 className="proforma__intertitre">Avec le cabinet, pendant la constitution</h3>
+              <p className="proforma__texte">Elles se préparent avec le cabinet, une fois vos statuts prêts : statuts signés, bail au nom de la société, actes de constitution. Rien à faire pour l’instant ; si vous en avez déjà une (vos propres statuts, par exemple), vous pouvez la déposer.</p>
+              <ul className="suivi__liste">
+              {aConstituer.map((piece) => (
+                <li key={piece.code} className="suivi__ligne">
+                  <span>
+                    {piece.libelle}
+                  </span>
+                  <DepotDePiece
+                    reference={lecture.reference}
+                    sceau={s}
+                    code={piece.code}
+                    libelle={piece.libelle}
+                  />
+                </li>
+              ))}
+              </ul>
+            </>
           )}
 
           {fournies.length > 0 && (

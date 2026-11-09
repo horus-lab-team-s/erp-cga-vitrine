@@ -40,12 +40,16 @@ export function PaiementEnLigne({
   expireLe,
   sceau,
   montant,
+  reste,
 }: {
   numero: string;
   version: string;
   expireLe: string;
   sceau: string;
+  /** Le reste à payer, mis en forme. */
   montant: string;
+  /** 9 novembre 2026 : le reste en francs, pour borner une tranche. */
+  reste?: number;
 }) {
   const [etat, payer, enCours] = useActionState(payerEnLigne, INITIAL);
   const routeur = useRouter();
@@ -80,8 +84,21 @@ export function PaiementEnLigne({
           placeholder="Laissez vide pour le numéro de votre demande"
         />
       </label>
+      {/* 9 novembre 2026 : le règlement peut se faire en plusieurs tranches. */}
+      <label className="proforma__champ">
+        Montant de ce versement (FCFA)
+        <input
+          name="montant"
+          type="number"
+          inputMode="numeric"
+          min={1}
+          max={reste}
+          step={1}
+          placeholder={`Laissez vide pour régler tout le reste (${montant})`}
+        />
+      </label>
       <button type="submit" className="bouton bouton--principal proforma__valider" disabled={enCours || enAttente}>
-        {enCours ? "…" : enAttente ? "Demande envoyée sur votre téléphone" : `Payer ${montant} par mobile money`}
+        {enCours ? "…" : enAttente ? "Demande envoyée sur votre téléphone" : "Payer par mobile money"}
       </button>
       {etat.fait && (
         <p role="status" className={`proforma__etat ${etat.simule ? "" : "proforma__etat--succes"}`}>

@@ -17,6 +17,11 @@ export type PieceAttendue = {
   obligatoire: boolean;
   fournie: boolean;
   fournie_le: string | null;
+  /**
+   * 9 novembre 2026 : `FONDATEUR`, à fournir dès maintenant ; `CONSTITUTION`, s'établit avec
+   * le cabinet (statuts signés, bail au nom de la société…) : l'entreprise n'existe pas encore.
+   */
+  moment?: "FONDATEUR" | "CONSTITUTION";
 };
 
 export type SuiviDeMaCreation = {

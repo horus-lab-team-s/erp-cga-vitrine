@@ -320,6 +320,27 @@
       "quartier": "Quartier",
       "autreQuartier": "Autre quartier…",
       "quartierPartiel": "Votre quartier n'est pas dans la liste ? Choisissez « Autre quartier » et écrivez-le."
+    },
+    "parcours": {
+      "titre": "Comment souhaitez-vous avancer ?",
+      "formulaire": "Je remplis le formulaire",
+      "formulaireDetail": "Vous connaissez votre projet : forme, activités, siège. Comptez dix minutes.",
+      "rendezVous": "Je préfère un rendez-vous",
+      "rendezVousDetail": "Un conseiller remplit le dossier avec vous, au cabinet ou en ligne. Les frais de dossier sont les mêmes.",
+      "mode": "Où se tient le rendez-vous ?",
+      "presentiel": "Au cabinet",
+      "enLigne": "En ligne (visioconférence)",
+      "creneau": "Choisissez un créneau",
+      "chargement": "Lecture des créneaux…",
+      "aucun": "Aucun créneau n'est libre pour l'instant : appelez le cabinet, ou remplissez le formulaire.",
+      "indisponible": "Les créneaux ne se lisent pas pour l'instant : réessayez dans un instant, ou appelez le cabinet.",
+      "courrielRequis": "Votre adresse électronique est nécessaire : la confirmation et votre code de dossier vous y sont envoyés.",
+      "penalite": "Un rendez-vous manqué sans prévenir est pénalisé : prévenez le cabinet si vous ne pouvez pas venir.",
+      "dejaPaye": "J'ai déjà un code de dossier (rendez-vous pris, ou frais de dossier déjà payés)",
+      "code": "Votre code de dossier",
+      "codeAide": "Il figure dans le courriel du cabinet, sous la forme K7M4-Q2XP. Vos frais déjà versés seront retrouvés et déduits.",
+      "rdvConfirme": "Votre rendez-vous est réservé : {quand}. La confirmation et votre code de dossier partent sur votre adresse électronique.",
+      "rattachee": "Votre demande est jointe à votre dossier. Frais de dossier déjà versés : {montant} FCFA, déduits de votre proforma."
     }
   }
 }

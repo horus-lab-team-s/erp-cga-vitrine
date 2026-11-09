@@ -108,7 +108,16 @@ export type DemandeSoumise = {
   origine: string;
   /** Les réponses aux questions du projet, par code de question. Toutes facultatives. */
   declarations?: Record<string, string>;
+  /** 9 novembre 2026 : « je préfère un rendez-vous ». L'heure est celle de Douala. */
+  rendezVous?: { mode: ModeRendezVous; debut: string } | null;
+  /** 9 novembre 2026 : « j'ai déjà un code de dossier » (frais déjà payés). */
+  codeDeDossier?: string | null;
 };
+
+export type ModeRendezVous = "PRESENTIEL" | "EN_LIGNE";
+
+/** Les créneaux libres, tels que le cabinet les propose (heures de Douala). */
+export type CreneauxProposes = { duree_minutes: number; modes: ModeRendezVous[]; creneaux: string[] };
 
 /**
  * Une question que le site pose au visiteur avant qu'un responsable le rappelle.
@@ -149,5 +158,15 @@ export type ResultatDemande =
       canalDeRappel: "APPEL" | "WHATSAPP" | "COURRIEL";
       /** 19 octobre 2026 (point 22) : de quoi joindre des pièces, juste après. Opaque. */
       jetonDePieces?: string | null;
+      /**
+       * 9 novembre 2026 : les frais de traitement du service, s'il en a, et le jeton opaque
+       * qui permet de les régler juste après l'envoi. Ils sont déduits du total de la proforma.
+       */
+      fraisDeTraitement?: string | null;
+      jetonDeFrais?: string | null;
+      /** 9 novembre 2026 : rattachée à un dossier existant par son code de dossier. */
+      rattachee?: boolean;
+      fraisDejaVerses?: string;
+      rendezVous?: { mode: ModeRendezVous; debut: string; fin: string } | null;
     }
   | { enregistree: false; motif: string };

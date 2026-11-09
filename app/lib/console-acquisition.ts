@@ -198,6 +198,15 @@ export type ProformaConsultee = {
   /** Le client peut régler en ligne depuis cette page. */
   reglable_en_ligne?: boolean;
   /**
+   * 9 novembre 2026 : les tranches. `payee` n'est vrai qu'au solde ; `engage` dit que le
+   * cabinet a commencé (seuil de démarrage atteint). Les frais de traitement versés à la
+   * soumission sont compris dans `paye` et déduits du reste.
+   */
+  frais_verses?: string;
+  paye?: string;
+  reste?: string | null;
+  engage?: boolean;
+  /**
    * Les rubriques du document reçu, avec leur sous-total (14 octobre 2026).
    *
    * ⚠️ Quand elles existent, `lignes` est vide : le calcul du barème ne totalise

@@ -10,6 +10,8 @@ import { CHAMPS_DE_LA_LOCALISATION } from "@/app/lib/geographie";
 import { IconeVitrine } from "./IconeVitrine";
 import { LocalisationDuSiege } from "./LocalisationDuSiege";
 import { PiecesDeLaDemande } from "./PiecesDeLaDemande";
+import { FraisDeTraitement } from "./FraisDeTraitement";
+import { ChoixDuCreneau } from "./ChoixDuCreneau";
 
 /**
  * Le formulaire de demande, commun à tous les services.
@@ -168,6 +170,16 @@ export function FormulaireService({
   const [accordWhatsapp, setAccordWhatsapp] = useState(false);
   const [envoye, setEnvoye] = useState(false);
   const [resultat, setResultat] = useState<ResultatDemande | "en-cours" | null>(null);
+  /* 9 novembre 2026 : « je remplis le formulaire » ou « je préfère un rendez-vous ». Le
+     sélecteur ne s'affiche que pour la création, où le formulaire est le plus long. */
+  const tp = useTranslations("vitrine.demande.parcours");
+  const proposeLeRendezVous = demarche === "CREATION";
+  const [parcours, setParcours] = useState<"formulaire" | "rendez-vous">("formulaire");
+  const enRendezVous = proposeLeRendezVous && parcours === "rendez-vous";
+  const [rdvMode, setRdvMode] = useState<"PRESENTIEL" | "EN_LIGNE">("PRESENTIEL");
+  const [rdvDebut, setRdvDebut] = useState("");
+  const [aUnCode, setAUnCode] = useState(false);
+  const [code, setCode] = useState("");
 
   /** Le corps du message, identique par courriel et par WhatsApp. */
   function corps() {
@@ -212,7 +224,10 @@ export function FormulaireService({
       message: [sujet, forme && !demandeLaForme ? nomsFormes(forme) : null, message]
         .filter(Boolean)
         .join("\n"),
-      declarations: avecLeSiege(declarations),
+      // Au rendez-vous, le conseiller remplit le projet avec le client : rien à déclarer ici.
+      declarations: enRendezVous ? {} : avecLeSiege(declarations),
+      rendezVous: enRendezVous && rdvDebut ? { mode: rdvMode, debut: rdvDebut } : null,
+      codeDeDossier: aUnCode ? code : null,
       consentementContact: consent,
       consentementWhatsapp: accordWhatsapp,
       origine: `vitrine-${demarche.toLowerCase()}`,
@@ -223,6 +238,8 @@ export function FormulaireService({
 
   function envoyer(evenement: React.FormEvent<HTMLFormElement>) {
     evenement.preventDefault();
+    // Un rendez-vous sans créneau ne part pas : le bouton le dit, le serveur le refuserait.
+    if (enRendezVous && !rdvDebut) return;
     enregistrer();
     const objet = encodeURIComponent(t("objet", { sujet }));
     window.location.href = `mailto:${DESTINATAIRE}?subject=${objet}&body=${encodeURIComponent(corps())}`;
@@ -236,6 +253,38 @@ export function FormulaireService({
     <form className="formulaire-service" onSubmit={envoyer} id="demande">
       <h3 className="formulaire-service__titre">{t("titre")}</h3>
       <p className="formulaire-service__detail">{t("detail")}</p>
+
+      {/* 9 novembre 2026 : le sélecteur VISIBLE. Tous les clients ne savent pas remplir seuls
+          un dossier de création ; ils prennent rendez-vous, et paient les mêmes frais. */}
+      {proposeLeRendezVous && (
+        <fieldset className="parcours">
+          <legend className="formulaire-service__projet-titre">{tp("titre")}</legend>
+          <label className="parcours__choix">
+            <input
+              type="radio"
+              name="parcours"
+              checked={parcours === "formulaire"}
+              onChange={() => setParcours("formulaire")}
+            />
+            <span>
+              <strong>{tp("formulaire")}</strong>
+              {tp("formulaireDetail")}
+            </span>
+          </label>
+          <label className="parcours__choix">
+            <input
+              type="radio"
+              name="parcours"
+              checked={parcours === "rendez-vous"}
+              onChange={() => setParcours("rendez-vous")}
+            />
+            <span>
+              <strong>{tp("rendezVous")}</strong>
+              {tp("rendezVousDetail")}
+            </span>
+          </label>
+        </fieldset>
+      )}
 
       {/* Le service est affiché, pas masqué : le visiteur doit voir sur quoi
           part sa demande. Il reste modifiable — on se trompe de page. */}
@@ -259,7 +308,7 @@ export function FormulaireService({
           frais. Une demande de création qui ne la dit pas oblige le cabinet à
           rappeler pour la poser — un aller-retour de plus, sur la démarche où
           le visiteur est déjà le plus hésitant. */}
-      {formes && formes.length > 0 && !demandeLaForme && (
+      {formes && formes.length > 0 && !demandeLaForme && !enRendezVous && (
         <div>
           <label className={etiquette} htmlFor="demande-forme">
             {t("champForme")}
@@ -322,7 +371,8 @@ export function FormulaireService({
 
       <div>
         <label className={etiquette} htmlFor="demande-courriel">
-          {t("champCourriel")} <span className="formulaire-service__facultatif">{t("facultatif")}</span>
+          {t("champCourriel")}{" "}
+          {!enRendezVous && <span className="formulaire-service__facultatif">{t("facultatif")}</span>}
         </label>
         <input
           id="demande-courriel"
@@ -331,7 +381,9 @@ export function FormulaireService({
           autoComplete="email"
           value={courriel}
           onChange={(e) => setCourriel(e.target.value)}
+          required={enRendezVous}
         />
+        {enRendezVous && <p className="formulaire-service__aide">{tp("courrielRequis")}</p>}
       </div>
 
       <div>
@@ -356,7 +408,41 @@ export function FormulaireService({
           c'est délibéré : chaque champ obligatoire de plus est un visiteur de
           moins, et un dossier à moitié rempli vaut mieux qu'une demande perdue.
           ───────────────────────────────────────────────────────────────────── */}
-      {questions.length > 0 && (
+      {enRendezVous && (
+        <ChoixDuCreneau mode={rdvMode} debut={rdvDebut} choisirMode={setRdvMode} choisirDebut={setRdvDebut} />
+      )}
+
+      {/* 9 novembre 2026 : « j'ai déjà payé les frais » — le code reçu par courriel rattache
+          cette demande au dossier existant, et tous les frais versés y sont retrouvés. */}
+      {proposeLeRendezVous && !enRendezVous && (
+        <div>
+          <label className="formulaire-service__consentement">
+            <input type="checkbox" checked={aUnCode} onChange={(e) => setAUnCode(e.target.checked)} />
+            {tp("dejaPaye")}
+          </label>
+          {aUnCode && (
+            <>
+              <label className={etiquette} htmlFor="demande-code">
+                {tp("code")}
+              </label>
+              <input
+                id="demande-code"
+                className="formulaire-service__champ"
+                type="text"
+                maxLength={20}
+                autoComplete="off"
+                placeholder="K7M4-Q2XP"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+              />
+              <p className="formulaire-service__aide">{tp("codeAide")}</p>
+            </>
+          )}
+        </div>
+      )}
+
+      {questions.length > 0 && !enRendezVous && (
         <fieldset className="formulaire-service__projet">
           <legend className="formulaire-service__projet-titre">{t("projetTitre")}</legend>
           <p className="formulaire-service__projet-detail">{t("projetDetail")}</p>
@@ -452,7 +538,11 @@ export function FormulaireService({
       </label>
 
       <div className="formulaire-service__actions">
-        <button type="submit" className="bouton bouton--principal bouton--large">
+        <button
+          type="submit"
+          className="bouton bouton--principal bouton--large"
+          disabled={enRendezVous && !rdvDebut}
+        >
           {t("envoyer")}
           <IconeVitrine nom="fleche" taille={16} />
         </button>
@@ -508,12 +598,38 @@ export function FormulaireService({
               : t("enregistrement.echec", { motif: resultat.motif })}
         </p>
       )}
+      {resultat !== null && resultat !== "en-cours" && resultat.enregistree && resultat.rendezVous && (
+        <p role="status" className="formulaire-service__confirmation">
+          {tp("rdvConfirme", {
+            quand: new Date(resultat.rendezVous.debut).toLocaleString("fr-FR", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          })}
+        </p>
+      )}
+      {resultat !== null && resultat !== "en-cours" && resultat.enregistree && resultat.rattachee && (
+        <p role="status" className="formulaire-service__confirmation">
+          {tp("rattachee", { montant: Number(resultat.fraisDejaVerses ?? 0).toLocaleString("fr-FR") })}
+        </p>
+      )}
     </form>
     {/* 19 octobre 2026 (point 22) : HORS du formulaire de la demande, qu'un
         formulaire ne s'imbrique pas dans un autre. */}
     {resultat !== null && resultat !== "en-cours" && resultat.enregistree && resultat.jetonDePieces && (
-      <PiecesDeLaDemande jeton={resultat.jetonDePieces} />
+      <PiecesDeLaDemande jeton={resultat.jetonDePieces} demarche={demarche} />
     )}
+    {/* 9 novembre 2026 : les frais de traitement, quand le cabinet en a fixé pour ce service. */}
+    {resultat !== null &&
+      resultat !== "en-cours" &&
+      resultat.enregistree &&
+      resultat.jetonDeFrais &&
+      resultat.fraisDeTraitement && (
+        <FraisDeTraitement jeton={resultat.jetonDeFrais} montant={resultat.fraisDeTraitement} />
+      )}
     </>
   );
 }

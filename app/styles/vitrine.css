@@ -5155,3 +5155,70 @@
     gap: 4px 14px !important;
   }
 }
+
+/* ── Versements de la proforma (9 novembre 2026) ───────────────────────────── */
+.proforma__versements {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.proforma__versements > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.proforma__versements dt,
+.proforma__versements dd {
+  margin: 0;
+}
+
+/* ── Rendez-vous de création (9 novembre 2026) ─────────────────────────────── */
+.parcours {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 0 0 8px;
+}
+.parcours__choix {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid var(--line-200, #d6d9e0);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.parcours__choix:has(input:checked) {
+  border-color: var(--brand-indigo-700, #2b3a8c);
+  box-shadow: 0 0 0 1px var(--brand-indigo-700, #2b3a8c);
+}
+.parcours__choix strong {
+  display: block;
+}
+.creneaux {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.creneaux__date {
+  margin: 0 0 4px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.creneaux__heures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.creneaux__heure {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line-200, #d6d9e0);
+  background: transparent;
+  cursor: pointer;
+}
+.creneaux__heure[aria-pressed="true"] {
+  background: var(--brand-indigo-700, #2b3a8c);
+  border-color: var(--brand-indigo-700, #2b3a8c);
+  color: #fff;
+}

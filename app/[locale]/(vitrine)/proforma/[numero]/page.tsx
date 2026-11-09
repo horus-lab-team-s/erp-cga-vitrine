@@ -207,9 +207,9 @@ export default async function PageProforma({
             // « à régler » à « réglé » dès que le règlement est constaté, que la
             // cliente ait payé en ligne ou au guichet du cabinet.
             <>
-              <h2 className="proforma__intertitre">Règlement constaté</h2>
+              <h2 className="proforma__intertitre">Proposition soldée</h2>
               <p role="status" className="proforma__etat proforma__etat--succes">
-                Votre règlement de {francs(lecture.montant)} est enregistré, et votre dossier est ouvert.
+                Votre règlement de {francs(lecture.montant)} est entièrement enregistré, et votre dossier est ouvert.
               </p>
               <p className="proforma__texte">
                 Le cabinet vous a écrit avec le lien de suivi de votre dossier : vous y verrez les pièces attendues et
@@ -219,11 +219,44 @@ export default async function PageProforma({
           ) : lecture.acceptee ? (
             <>
               <h2 className="proforma__intertitre">Régler votre proposition</h2>
+              {/* 9 novembre 2026 : payé, reste, en une ou plusieurs tranches ; les frais
+                  de traitement versés à la demande en sont déduits. */}
+              <dl className="proforma__versements">
+                <div>
+                  <dt>Total de la procédure</dt>
+                  <dd>{francs(lecture.montant)}</dd>
+                </div>
+                {Number(lecture.frais_verses ?? 0) > 0 && (
+                  <div>
+                    <dt>dont frais de traitement déjà versés</dt>
+                    <dd>{francs(lecture.frais_verses ?? "0")}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Déjà payé</dt>
+                  <dd>{francs(lecture.paye ?? "0")}</dd>
+                </div>
+                <div>
+                  <dt>Reste à payer</dt>
+                  <dd>
+                    <strong>{francs(lecture.reste ?? lecture.montant)}</strong>
+                  </dd>
+                </div>
+              </dl>
               <p role="status" className="proforma__etat proforma__etat--succes">
-                Vous avez accepté cette proposition. Il reste à la régler : {francs(lecture.montant)}.
+                {lecture.engage
+                  ? "Le cabinet a commencé à traiter votre dossier. Réglez le reste quand vous le pouvez, en une ou plusieurs fois."
+                  : "Vous avez accepté cette proposition. Vous pouvez la régler en une ou plusieurs fois."}
               </p>
               {lecture.reglable_en_ligne && (
-                <PaiementEnLigne numero={lecture.numero} version={v} expireLe={e} sceau={s} montant={francs(lecture.montant)} />
+                <PaiementEnLigne
+                  numero={lecture.numero}
+                  version={v}
+                  expireLe={e}
+                  sceau={s}
+                  montant={francs(lecture.reste ?? lecture.montant)}
+                  reste={Number(lecture.reste ?? lecture.montant)}
+                />
               )}
               <p className="proforma__texte proforma__autrement">
                 Vous pouvez aussi régler au cabinet, en espèces ou par virement : les coordonnées figurent sur la proforma

@@ -43,7 +43,7 @@ import { revalidatePath } from "next/cache";
 
 import { appeler, ErreurApi } from "./api";
 import type { EtatActe } from "./saisie";
-import { DEMARCHES, type DemandeSoumise, type ResultatDemande } from "./acquisition";
+import { DEMARCHES, type CreneauxProposes, type DemandeSoumise, type ResultatDemande } from "./acquisition";
 import type { ProformaConsultee, ProformaEmise, Proposition } from "./console-acquisition";
 import { adresseAbsolue } from "./site";
 
@@ -52,6 +52,11 @@ type AccuseDeDemande = {
   canal_de_rappel: "APPEL" | "WHATSAPP" | "COURRIEL";
   message: string;
   jeton_de_pieces?: string | null;
+  frais_de_traitement?: string | null;
+  jeton_de_frais?: string | null;
+  rattachee?: boolean;
+  frais_deja_verses?: string;
+  rendez_vous?: { mode: "PRESENTIEL" | "EN_LIGNE"; debut: string; fin: string } | null;
 };
 
 /**
@@ -120,12 +125,22 @@ export async function deposerUneDemande(demande: DemandeSoumise): Promise<Result
         ...(demande.consentementWhatsapp === true ? { version_du_texte: VERSION_DU_TEXTE_WHATSAPP } : {}),
         origine: String(demande.origine ?? "vitrine").slice(0, 40),
         declarations: declarationsPropres(demande.declarations),
+        // 9 novembre 2026 : le rendez-vous et le code de dossier. Le serveur vérifie tout.
+        ...(demande.rendezVous ? { rendez_vous: demande.rendezVous } : {}),
+        ...(String(demande.codeDeDossier ?? "").trim()
+          ? { code_de_dossier: String(demande.codeDeDossier).trim().slice(0, 20) }
+          : {}),
       },
     });
     return {
       enregistree: true,
       canalDeRappel: accuse.canal_de_rappel,
       jetonDePieces: accuse.jeton_de_pieces ?? null,
+      fraisDeTraitement: accuse.frais_de_traitement ?? null,
+      jetonDeFrais: accuse.jeton_de_frais ?? null,
+      rattachee: accuse.rattachee ?? false,
+      fraisDejaVerses: accuse.frais_deja_verses ?? "0",
+      rendezVous: accuse.rendez_vous ?? null,
     };
   } catch (erreur) {
     // ⚠️ Le motif du backend est rendu tel quel : « +33612345678 n'est pas un
@@ -139,6 +154,79 @@ export async function deposerUneDemande(demande: DemandeSoumise): Promise<Result
           : "Le service d'enregistrement est momentanément indisponible.",
     };
   }
+}
+
+/** Les créneaux de rendez-vous libres (9 novembre 2026). `null` si le serveur ne répond pas. */
+export async function lireLesCreneaux(): Promise<CreneauxProposes | null> {
+  try {
+    return await appeler<CreneauxProposes>("/acquisition/rendez-vous/creneaux");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Les frais de traitement d'une demande : leur montant, et s'ils sont versés (9 novembre 2026).
+ * `null` si le serveur ne répond pas : la page n'affirme alors rien.
+ */
+export async function lireLesFraisDeLaDemande(
+  jeton: string,
+): Promise<{ montant: string | null; verses: boolean } | null> {
+  try {
+    return await appeler<{ montant: string | null; verses: boolean }>(
+      "/acquisition/demandes/frais-de-traitement/etat",
+      { methode: "POST", corps: { jeton } },
+    );
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Le visiteur demande le débit de ses frais de traitement. **N'encaisse rien** : c'est la
+ * notification de l'opérateur qui constate le versement, et le bloc relit son état.
+ */
+export async function payerLesFraisDeTraitement(
+  _precedent: EtatPaiementEnLigne,
+  donnees: FormData,
+): Promise<EtatPaiementEnLigne> {
+  const jeton = String(donnees.get("jeton") ?? "").trim();
+  const telephone = String(donnees.get("telephone") ?? "").trim();
+  if (!jeton) return { echec: "Rechargez la page, puis renvoyez votre demande.", fait: null, simule: false };
+  try {
+    const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean }>(
+      "/acquisition/demandes/frais-de-traitement/paiement-en-ligne",
+      { methode: "POST", corps: { jeton, telephone } },
+    );
+    return messageDuPaiement(reponse);
+  } catch (erreur) {
+    if (erreur instanceof ErreurApi && erreur.statut !== null) return { echec: erreur.message, fait: null, simule: false };
+    return { echec: "La demande de paiement n'a pas abouti : réessayez dans un instant.", fait: null, simule: false };
+  }
+}
+
+/** Ce que la page dit après une demande de débit, quelle qu'elle soit. */
+function messageDuPaiement(reponse: {
+  accepte: boolean;
+  message: string;
+  telephone: string;
+  simule: boolean;
+}): EtatPaiementEnLigne {
+  if (!reponse.accepte) {
+    return { echec: `L'opérateur n'a pas accepté la demande : ${reponse.message}`, fait: null, simule: false };
+  }
+  return reponse.simule
+    ? {
+        echec: null,
+        simule: true,
+        fait:
+          "Le paiement en ligne n'est pas encore branché sur l'opérateur : aucune demande n'a été envoyée sur votre téléphone. Réglez au cabinet, en espèces ou par virement.",
+      }
+    : {
+        echec: null,
+        simule: false,
+        fait: `Une demande de paiement est partie sur le numéro ${reponse.telephone}. Validez-la avec votre code : cette page se mettra à jour toute seule.`,
+      };
 }
 
 /** Ce que le bloc des pièces jointes affiche : la dernière erreur, et ce qui est parti. */
@@ -464,6 +552,11 @@ export async function payerEnLigne(
 ): Promise<EtatPaiementEnLigne> {
   const numero = String(donnees.get("numero") ?? "").trim();
   const telephone = String(donnees.get("telephone") ?? "").trim();
+  // 9 novembre 2026 : une tranche. Vide : tout le reste à payer. Le serveur borne.
+  const tranche = String(donnees.get("montant") ?? "").replace(/\s/g, "");
+  if (tranche && !/^\d+$/.test(tranche)) {
+    return { echec: "Le montant s'écrit en francs, sans virgule.", fait: null, simule: false };
+  }
   try {
     const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean }>(
       `/acquisition/proformas/${encodeURIComponent(numero)}/paiement-en-ligne`,
@@ -474,24 +567,11 @@ export async function payerEnLigne(
           expire_le: String(donnees.get("expire_le") ?? ""),
           sceau: String(donnees.get("sceau") ?? ""),
           telephone,
+          ...(tranche ? { montant: tranche } : {}),
         },
       },
     );
-    if (!reponse.accepte) {
-      return { echec: `L'opérateur n'a pas accepté la demande : ${reponse.message}`, fait: null, simule: false };
-    }
-    return reponse.simule
-      ? {
-          echec: null,
-          simule: true,
-          fait:
-            "Le paiement en ligne n'est pas encore branché sur l'opérateur : aucune demande n'a été envoyée sur votre téléphone. Réglez au cabinet, en espèces ou par virement.",
-        }
-      : {
-          echec: null,
-          simule: false,
-          fait: `Une demande de paiement est partie sur le numéro ${reponse.telephone}. Validez-la avec votre code : cette page se mettra à jour toute seule.`,
-        };
+    return messageDuPaiement(reponse);
   } catch (erreur) {
     if (erreur instanceof ErreurApi) return { echec: erreur.message, fait: null, simule: false };
     throw erreur;
