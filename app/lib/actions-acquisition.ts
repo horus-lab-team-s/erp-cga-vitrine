@@ -194,7 +194,7 @@ export async function payerLesFraisDeTraitement(
   const telephone = String(donnees.get("telephone") ?? "").trim();
   if (!jeton) return { echec: "Rechargez la page, puis renvoyez votre demande.", fait: null, simule: false };
   try {
-    const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean }>(
+    const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean; valide_d_office?: boolean }>(
       "/acquisition/demandes/frais-de-traitement/paiement-en-ligne",
       { methode: "POST", corps: { jeton, telephone } },
     );
@@ -211,9 +211,19 @@ function messageDuPaiement(reponse: {
   message: string;
   telephone: string;
   simule: boolean;
+  valide_d_office?: boolean;
 }): EtatPaiementEnLigne {
   if (!reponse.accepte) {
     return { echec: `L'opérateur n'a pas accepté la demande : ${reponse.message}`, fait: null, simule: false };
+  }
+  // 9 novembre 2026 : période d'essai — le paiement est déjà validé, sans débit réel. La
+  // page se relit (simule: false) et passe d'elle-même à « réglé ».
+  if (reponse.valide_d_office) {
+    return {
+      echec: null,
+      simule: false,
+      fait: "Paiement d'essai validé automatiquement : aucun débit réel n'a été effectué. Cette page se met à jour.",
+    };
   }
   return reponse.simule
     ? {
@@ -558,7 +568,7 @@ export async function payerEnLigne(
     return { echec: "Le montant s'écrit en francs, sans virgule.", fait: null, simule: false };
   }
   try {
-    const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean }>(
+    const reponse = await appeler<{ accepte: boolean; message: string; telephone: string; simule: boolean; valide_d_office?: boolean }>(
       `/acquisition/proformas/${encodeURIComponent(numero)}/paiement-en-ligne`,
       {
         methode: "POST",

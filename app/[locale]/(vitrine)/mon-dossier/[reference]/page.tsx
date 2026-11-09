@@ -83,11 +83,14 @@ export default async function PageMonDossier({
   const etape = ETAPES_DE_CREATION[position.courante];
   // 9 novembre 2026 : l'entreprise n'existe pas encore. Ce qui se prépare avec le cabinet
   // (statuts signés, bail au nom de la société…) n'est pas compté comme « à fournir ».
-  const plusTard = (p: { moment?: string }) => p.moment === "CONSTITUTION";
+  const plusTard = (p: { moment?: string }) =>
+    p.moment === "CONSTITUTION" || p.moment === "IMMATRICULATION";
   const attendues = lecture.pieces.filter((p) => p.obligatoire && !plusTard(p));
   const recues = attendues.filter((p) => p.fournie).length;
   const manquantes = lecture.pieces.filter((p) => !p.fournie && !plusTard(p));
-  const aConstituer = lecture.pieces.filter((p) => !p.fournie && plusTard(p));
+  const aConstituer = lecture.pieces.filter((p) => !p.fournie && p.moment === "CONSTITUTION");
+  // 9 novembre 2026 : l'immatriculation de l'entreprise et du personnel, après la création.
+  const aImmatriculer = lecture.pieces.filter((p) => !p.fournie && p.moment === "IMMATRICULATION");
   const fournies = lecture.pieces.filter((p) => p.fournie);
 
   return (
@@ -250,6 +253,21 @@ export default async function PageMonDossier({
                   />
                 </li>
               ))}
+              </ul>
+            </>
+          )}
+
+          {!lecture.clos && aImmatriculer.length > 0 && (
+            <>
+              <h3 className="proforma__intertitre">Pour l&rsquo;immatriculation, après la création</h3>
+              <p className="proforma__texte">Elles servent à immatriculer votre entreprise et votre personnel, une fois la société créée. Pour chaque employé, le cabinet vous demandera aussi ses pièces et ses coordonnées.</p>
+              <ul className="suivi__liste">
+                {aImmatriculer.map((piece) => (
+                  <li key={piece.code} className="suivi__ligne">
+                    <span>{piece.libelle}</span>
+                    <DepotDePiece reference={lecture.reference} sceau={s} code={piece.code} libelle={piece.libelle} />
+                  </li>
+                ))}
               </ul>
             </>
           )}
