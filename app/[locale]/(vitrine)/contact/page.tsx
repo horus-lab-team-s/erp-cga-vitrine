@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { ADRESSE_CONNEXION } from "@/app/lib/adresse-console";
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
@@ -14,7 +15,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.contact" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/contact"), title: t("titre"), description: t("detail") };
 }
 
 /**

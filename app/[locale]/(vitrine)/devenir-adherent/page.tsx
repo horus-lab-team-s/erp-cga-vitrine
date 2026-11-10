@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { EtapesProgression } from "@/app/components/vitrine/EtapesProgression";
@@ -15,7 +16,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.adherent" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/devenir-adherent"), title: t("titre"), description: t("detail") };
 }
 
 /**

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 import { AcceptationProforma } from "@/app/components/vitrine/AcceptationProforma";
+import { PaiementEnLigne } from "@/app/components/vitrine/PaiementEnLigne";
 import { consulterLaProforma } from "@/app/lib/actions-acquisition";
 
 // ⚠️ Jamais indexée : son adresse porte un sceau qui vaut authentification.
@@ -107,10 +108,27 @@ export default async function PageProforma({
   }
 
   const ouverte = !lecture.acceptee && lecture.etat !== "REMPLACEE" && lecture.etat !== "ANNULEE";
+  const lienDuDocument = `/fr/proforma/${encodeURIComponent(lecture.numero)}/document?v=${v}&e=${encodeURIComponent(e)}&s=${encodeURIComponent(s)}`;
+  const cabinet = lecture.cabinet;
   return (
     <main className="proforma">
       <section className="bloc proforma__bloc">
         <div className="proforma__carte">
+          {/* 9 novembre 2026 : l'en-tête du document, comme sur la proforma imprimée. */}
+          {cabinet && (
+            <header className="proforma__entete">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/marque/cga-logo-couleur.jpg" alt="" width={96} height={54} className="proforma__logo" />
+              <div className="proforma__maison">
+                <strong>{cabinet.raison_sociale}</strong>
+                <span>{cabinet.activite}</span>
+              </div>
+              <div className="proforma__contact">
+                <span>{cabinet.site}</span>
+                <span>{cabinet.courriel}</span>
+              </div>
+            </header>
+          )}
           <p className="proforma__surtitre">Proposition {lecture.numero}</p>
           <h1 className="proforma__titre">{libelleDuService(lecture.service)}</h1>
           <p className="proforma__montant">{francs(lecture.montant)}</p>
@@ -119,6 +137,35 @@ export default async function PageProforma({
             {new Date(lecture.expire_le).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.
           </p>
 
+          {/* ⚠️ LES RUBRIQUES DU DOCUMENT, QUAND IL EN PORTE (14 octobre 2026). Le
+              serveur ne rend alors plus le calcul du barème, qui ne totalisait pas
+              le montant : elle lit ici ce qu'elle lit sur la proforma reçue. */}
+          {(lecture.rubriques?.length ?? 0) > 0 && (
+            <div className="proforma__detail">
+              <h2 className="proforma__intertitre">Ce qui compose le prix</h2>
+              {lecture.rubriques!.map((r) => (
+                <div key={r.numero} className="proforma__rubrique">
+                  <h3 className="proforma__rubrique-titre">
+                    {r.numero}. {r.intitule}
+                  </h3>
+                  <dl className="proforma__lignes">
+                    {r.lignes.map((l, i) => (
+                      <div key={`${r.numero}-${i}`} className="proforma__ligne">
+                        <dt>{l.libelle}</dt>
+                        <dd className="tabulaire">{francs(l.montant)}</dd>
+                      </div>
+                    ))}
+                    {r.lignes.length > 1 && (
+                      <div className="proforma__ligne proforma__sous-total">
+                        <dt>Sous-total</dt>
+                        <dd className="tabulaire">{francs(r.sous_total)}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              ))}
+            </div>
+          )}
           {lecture.lignes.length > 0 && (
             <div className="proforma__detail">
               <h2 className="proforma__intertitre">Ce qui compose le prix</h2>
@@ -160,22 +207,85 @@ export default async function PageProforma({
           Le lien passe par le relais du site : l'adresse de l'API est interne,
           et le navigateur ne la connaît pas.
         */}
-        <p className="proforma__document">
-          <a
-            className="bouton bouton--secondaire"
-            href={`/fr/proforma/${encodeURIComponent(lecture.numero)}/document?v=${v}&e=${encodeURIComponent(e)}&s=${encodeURIComponent(s)}`}
-            target="_blank"
-            rel="noopener"
-          >
-            Lire la proforma détaillée
-          </a>
-        </p>
+        {lecture.document_disponible !== false ? (
+          <p className="proforma__document">
+            <a className="bouton bouton--secondaire" href={lienDuDocument} target="_blank" rel="noopener">
+              Lire la proforma détaillée
+            </a>
+            {/* 9 novembre 2026 : la garder, l'imprimer, la transmettre à sa banque. */}
+            <a className="bouton bouton--secondaire" href={`${lienDuDocument}&telecharger=1`} download>
+              Télécharger la proforma (PDF)
+            </a>
+          </p>
+        ) : (
+          <p className="proforma__texte proforma__document">
+            Le cabinet vous a transmis le montant, sans document détaillé. Pour recevoir la proforma en PDF,
+            répondez à son message.
+          </p>
+        )}
 
         <div className="proforma__carte">
-          {lecture.acceptee ? (
-            <p role="status" className="proforma__etat proforma__etat--succes">
-              Vous avez accepté cette proposition. Le cabinet vous contacte pour le règlement.
-            </p>
+          {lecture.payee ? (
+            // ⚠️ Lu au serveur à chaque affichage : la page passe d'elle-même de
+            // « à régler » à « réglé » dès que le règlement est constaté, que la
+            // cliente ait payé en ligne ou au guichet du cabinet.
+            <>
+              <h2 className="proforma__intertitre">Proposition soldée</h2>
+              <p role="status" className="proforma__etat proforma__etat--succes">
+                Votre règlement de {francs(lecture.montant)} est entièrement enregistré, et votre dossier est ouvert.
+              </p>
+              <p className="proforma__texte">
+                Le cabinet vous a écrit avec le lien de suivi de votre dossier : vous y verrez les pièces attendues et
+                l&rsquo;avancement, sans mot de passe.
+              </p>
+            </>
+          ) : lecture.acceptee ? (
+            <>
+              <h2 className="proforma__intertitre">Régler votre proposition</h2>
+              {/* 9 novembre 2026 : payé, reste, en une ou plusieurs tranches ; les frais
+                  de traitement versés à la demande en sont déduits. */}
+              <dl className="proforma__versements">
+                <div>
+                  <dt>Total de la procédure</dt>
+                  <dd>{francs(lecture.montant)}</dd>
+                </div>
+                {Number(lecture.frais_verses ?? 0) > 0 && (
+                  <div>
+                    <dt>dont frais de traitement déjà versés</dt>
+                    <dd>{francs(lecture.frais_verses ?? "0")}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Déjà payé</dt>
+                  <dd>{francs(lecture.paye ?? "0")}</dd>
+                </div>
+                <div>
+                  <dt>Reste à payer</dt>
+                  <dd>
+                    <strong>{francs(lecture.reste ?? lecture.montant)}</strong>
+                  </dd>
+                </div>
+              </dl>
+              <p role="status" className="proforma__etat proforma__etat--succes">
+                {lecture.engage
+                  ? "Le cabinet a commencé à traiter votre dossier. Réglez le reste quand vous le pouvez, en une ou plusieurs fois."
+                  : "Vous avez accepté cette proposition. Vous pouvez la régler en une ou plusieurs fois."}
+              </p>
+              {lecture.reglable_en_ligne && (
+                <PaiementEnLigne
+                  numero={lecture.numero}
+                  version={v}
+                  expireLe={e}
+                  sceau={s}
+                  montant={francs(lecture.reste ?? lecture.montant)}
+                  reste={Number(lecture.reste ?? lecture.montant)}
+                />
+              )}
+              <p className="proforma__texte proforma__autrement">
+                Vous pouvez aussi régler au cabinet, en espèces ou par virement : les coordonnées figurent sur la proforma
+                détaillée. Votre règlement sera constaté à la caisse, et cette page se mettra à jour.
+              </p>
+            </>
           ) : !ouverte ? (
             <p role="status" className="proforma__etat">
               Cette proposition {lecture.etat === "REMPLACEE" ? "a été remplacée par une nouvelle version" : "a été annulée"}.
@@ -193,6 +303,15 @@ export default async function PageProforma({
           Une question avant de valider ? Répondez au message du cabinet, ou{" "}
           <a href={whatsappDuCabinet}>écrivez-nous sur WhatsApp</a>.
         </p>
+
+        {/* 9 novembre 2026 : le pied du document : coordonnées, implantations, agrément. */}
+        {cabinet && cabinet.pied.length > 0 && (
+          <footer className="proforma__pied">
+            {cabinet.pied.map((ligne) => (
+              <p key={ligne}>{ligne}</p>
+            ))}
+          </footer>
+        )}
       </section>
     </main>
   );

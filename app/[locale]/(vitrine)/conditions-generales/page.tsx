@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { PageLegale } from "@/app/components/vitrine/PageLegale";
 
@@ -16,7 +17,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pages.legal.cgv" });
-  return { title: t("titre"), description: t("detail") };
+  return {
+    alternates: alternatives(locale, "/conditions-generales"), title: t("titre"), description: t("detail") };
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {

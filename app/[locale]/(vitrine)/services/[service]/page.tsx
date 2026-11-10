@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { alternatives } from "@/app/lib/site";
 
 import { EnteteDePage } from "@/app/components/vitrine/EnteteDePage";
 import { EtapesProgression } from "@/app/components/vitrine/EtapesProgression";
@@ -52,6 +53,7 @@ export async function generateMetadata({
 
   const t = await getTranslations({ locale, namespace: `pages.fiches.${fiche.cle}` });
   return {
+    alternates: alternatives(locale, `/services/${service}`),
     title: t("titre"),
     description: t("detail"),
     openGraph: {

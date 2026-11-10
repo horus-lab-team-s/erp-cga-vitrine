@@ -127,6 +127,9 @@ export function PiedVitrine() {
               <li>
                 <a href={ADRESSE_CONNEXION}>{commun("actions.espaceClient")}</a>
               </li>
+              <li>
+                <Link href="/application">{t("application")}</Link>
+              </li>
             </ul>
           </div>
 
@@ -145,6 +148,9 @@ export function PiedVitrine() {
               </li>
               <li>
                 <Link href="/le-cabinet#partenaires">{t("nosPartenaires")}</Link>
+              </li>
+              <li>
+                <Link href="/carrieres">{t("nousRejoindre")}</Link>
               </li>
               {/* Le blog est aussi au pied : c'est là que descend un lecteur qui
                   a fini un article et cherche le suivant. */}
@@ -177,12 +183,11 @@ export function PiedVitrine() {
           </span>
         </div>
 
-        {/* La signature de l'atelier qui a réalisé le site, centrée en dernière
-            ligne. Lien sortant : `noopener noreferrer` comme partout ailleurs. */}
+        {/* La signature, centrée en dernière ligne : l'entreprise porteuse de la
+            plateforme (17 octobre 2026), seule depuis le 18 octobre, comme sur la
+            page de connexion de la console. */}
         <p className="pied-vitrine__signature">
-          <a href="https://horus-lab.com" target="_blank" rel="noopener noreferrer">
-            Powered by <strong>BïdaSoft</strong>
-          </a>
+          Powered by <strong>Zayra Technologies</strong>
         </p>
       </div>
     </footer>

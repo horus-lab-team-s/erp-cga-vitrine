@@ -193,6 +193,45 @@ export type ProformaConsultee = {
   debours: { libelle: string; montant: string }[];
   expire_le: string;
   acceptee: boolean;
+  /** Le règlement est constaté, quel qu'en soit le chemin. */
+  payee?: boolean;
+  /** Le client peut régler en ligne depuis cette page. */
+  reglable_en_ligne?: boolean;
+  /**
+   * 9 novembre 2026 : les tranches. `payee` n'est vrai qu'au solde ; `engage` dit que le
+   * cabinet a commencé (seuil de démarrage atteint). Les frais de traitement versés à la
+   * soumission sont compris dans `paye` et déduits du reste.
+   */
+  frais_verses?: string;
+  paye?: string;
+  reste?: string | null;
+  engage?: boolean;
+  /**
+   * 9 novembre 2026 : l'en-tête et le pied du document, lus au référentiel du serveur
+   * (`cabinet/identite_des_documents.yaml`) : la page porte la même identité que le PDF.
+   */
+  /** 9 novembre 2026 : un PDF existe ; sans lui, ni « Lire » ni « Télécharger ». */
+  document_disponible?: boolean;
+  cabinet?: {
+    raison_sociale: string;
+    activite: string;
+    site: string;
+    courriel: string;
+    pied: string[];
+  } | null;
+  /**
+   * Les rubriques du document reçu, avec leur sous-total (14 octobre 2026).
+   *
+   * ⚠️ Quand elles existent, `lignes` est vide : le calcul du barème ne totalise
+   * pas le montant du document, et la page montrait deux explications du même
+   * prix qui se contredisaient.
+   */
+  rubriques?: {
+    numero: string;
+    intitule: string;
+    lignes: { libelle: string; montant: string }[];
+    sous_total: string;
+  }[];
 };
 
 /** L'état des canaux de contact (pas 90) : ceux que le centre exploite, et pourquoi les autres ne le sont pas. */

@@ -8,9 +8,9 @@
     "piecesNote": "Vous les photographierez depuis votre téléphone une fois votre compte créé. Inutile de les préparer avant de souscrire.",
     "pieces": [
       "Une pièce d'identité en cours de validité pour chaque associé et pour le gérant.",
-      "Un justificatif de domicile de moins de trois mois pour le siège social.",
+      "L'adresse précise du futur siège (quartier, rue, repère) : le bail se signera au nom de la société, une fois celle-ci créée.",
       "Trois propositions de dénomination sociale, par ordre de préférence.",
-      "Le plan de localisation du siège, ou le contrat de bail s'il en existe un.",
+      "Le plan de localisation du futur siège, et vos statuts ou un projet de statuts si vous en avez déjà : sinon, le cabinet les rédige.",
       "Un extrait de casier judiciaire du gérant, daté de moins de trois mois."
     ],
     "faqKicker": "Questions fréquentes",
@@ -77,7 +77,7 @@
     "suiviComptable": "Suivi comptable",
     "souscrire": "Souscrire en ligne",
     "devisWhatsapp": "Recevoir ce devis par WhatsApp",
-    "note": "Estimation indicative fondée sur les tarifs officiels en vigueur. Le devis définitif vous est confirmé après examen de votre projet, sans frais de dossier.",
+    "note": "Estimation indicative fondée sur les tarifs officiels en vigueur. Le devis définitif vous est confirmé après examen de votre projet. Des frais de traitement de dossier peuvent être demandés à l'envoi de votre demande : ils sont déduits du montant final.",
     "semaines": "semaines",
     "nonRetenu": "non retenu",
     "parMois": "12 500 FCFA par mois",
@@ -91,7 +91,7 @@
     "devisImprimer": "Imprimer ou enregistrer en PDF",
     "devisRetour": "Revenir à l'estimateur",
     "devisSuiviNote": "Cet abonnement se règle mensuellement : il n'entre pas dans le total à régler à la création.",
-    "devisAvertissement": "⚠️ Ce document est une estimation, non une facture, et n'engage pas le cabinet. Les frais officiels dépendent du dossier réel et le barème peut évoluer. Le devis définitif vous est confirmé après examen de votre projet, sans frais de dossier.",
+    "devisAvertissement": "⚠️ Ce document est une estimation, non une facture, et n'engage pas le cabinet. Les frais officiels dépendent du dossier réel et le barème peut évoluer. Le devis définitif vous est confirmé après examen de votre projet. Des frais de traitement de dossier peuvent être demandés à l'envoi de votre demande : ils sont déduits du montant final.",
     "devisPied": "CGA Broad Range Consulting Group — Douala, Yaoundé, Bafoussam. Contactez-nous pour transformer cette estimation en devis ferme.",
     "lignes": {
       "cfce": "Caisse du guichet unique (CFCE)",
@@ -942,5 +942,112 @@
     "prudence": "Si vous étiez en train d'envoyer un formulaire, vérifiez avant de recommencer : cette page ne sait pas dire si l'envoi a abouti.",
     "reference": "Référence à citer si vous appelez le cabinet",
     "reessayer": "Réessayer"
+  },
+  "carrieres": {
+    "kicker": "Nous rejoindre",
+    "titre": "Carrières au cabinet",
+    "detail": "Les postes ouverts au CGA Broad Range Consulting Group. Lisez les qualifications attendues, puis postulez avec votre CV.",
+    "aucune": "Aucun poste n'est ouvert pour l'instant. Revenez bientôt, ou écrivez-nous pour une candidature spontanée.",
+    "voir": "Lire l'offre et postuler",
+    "jusquau": "Candidatures jusqu'au",
+    "lePoste": "Le poste",
+    "qualifications": "Qualifications attendues",
+    "postuler": "Postuler",
+    "champNom": "Nom et prénom",
+    "champTel": "Téléphone ou WhatsApp",
+    "champMail": "Adresse électronique, facultative : vous y recevrez l'accusé de réception",
+    "champMessage": "Quelques mots sur votre motivation, facultatif",
+    "champCv": "Votre CV, en PDF (5 Mo au plus)",
+    "consentement": "J'accepte que le cabinet conserve ma candidature pour ce recrutement.",
+    "envoyer": "Envoyer ma candidature",
+    "envoi": "Envoi…",
+    "retour": "Tous les postes",
+    "contrats": {
+      "CDI": "CDI",
+      "CDD": "CDD",
+      "STAGE": "Stage",
+      "PRESTATION": "Prestation"
+    }
+  },
+  "application": {
+    "kicker": "Application mobile",
+    "titre": "Votre dossier dans la poche",
+    "detail": "Déposez vos factures d'une photo, suivez vos échéances et réglez par mobile money : l'espace adhérent, sur votre téléphone Android.",
+    "accueilTitre": "L'espace adhérent, sur votre téléphone",
+    "accueilDetail": "Une facture arrive sur WhatsApp ou par courriel : elle part au cabinet en deux gestes, depuis l'application.",
+    "accueilAction": "Découvrir l'application",
+    "atouts": {
+      "photo": "Une photo, une image de la galerie ou un scan PDF : la pièce part au cabinet",
+      "echeances": "Vos échéances, vos honoraires et vos règlements par mobile money",
+      "horsLigne": "Vos documents restent lisibles, même sans réseau"
+    },
+    "telechargement": {
+      "kicker": "Télécharger",
+      "titre": "Installez l'application",
+      "detail": "Elle est réservée aux adhérents du cabinet : vous vous y connectez avec les identifiants de votre espace client.",
+      "googlePlay": "Télécharger sur Google Play",
+      "android": "Télécharger pour Android",
+      "exigence": "Android {version} ou plus récent.",
+      "bientot": "Bientôt disponible au téléchargement.",
+      "enAttendant": "En attendant, votre chargé de clientèle vous envoie le lien d'installation sur demande, et votre espace client reste ouvert sur ce site.",
+      "etapes": {
+        "installer": "Installez l'application sur votre téléphone Android.",
+        "connecter": "Connectez-vous avec l'adresse et le mot de passe de votre espace client.",
+        "deposer": "Déposez votre première pièce : elle arrive au cabinet dans la minute."
+      },
+      "taille": "({mo} Mo)",
+      "wifi": "De préférence en Wi-Fi.",
+      "autresVersions": "Autres versions et vérification du fichier",
+      "invalide": "Si Android affiche « paquet non valide », le téléchargement a été interrompu : supprimez le fichier de vos Téléchargements et téléchargez-le de nouveau. Le bouton choisit la version de votre téléphone ; en cas de doute, prenez la version universelle.",
+      "empreinte": "Empreinte du fichier, pour vérifier qu'il est complet",
+      "roles": {
+        "arm64": "Téléphone récent (64 bits)",
+        "armv7": "Téléphone d'entrée de gamme (32 bits)",
+        "universel": "Version universelle, pour tous les téléphones"
+      }
+    },
+    "ecrans": {
+      "kicker": "Ses écrans",
+      "titre": "Ce que vous y faites",
+      "accueil": {
+        "titre": "Votre mois",
+        "detail": "Les pièces attendues, les retards et les documents déposés, en un coup d'œil.",
+        "alt": "Accueil de l'application : le mois de l'adhérent et trois chiffres"
+      },
+      "deposer": {
+        "titre": "Déposer une pièce",
+        "detail": "Photographier, choisir dans la galerie ou importer un scan PDF.",
+        "alt": "Les trois façons de déposer une pièce"
+      },
+      "echeances": {
+        "titre": "Vos échéances",
+        "detail": "Ce qui est dû, ce qui est en retard, et comment le régler.",
+        "alt": "Les échéances fiscales et sociales de l'adhérent"
+      },
+      "documents": {
+        "titre": "Vos documents",
+        "detail": "Les accusés de dépôt obtenus par le cabinet, à présenter à l'administration.",
+        "alt": "Les documents déposés par le cabinet"
+      }
+    },
+    "questions": {
+      "titre": "Questions fréquentes",
+      "compte": {
+        "q": "Faut-il un compte particulier ?",
+        "r": "Non : ce sont les identifiants de votre espace client. Vous les recevez par courriel dès que votre adhésion est réglée."
+      },
+      "iphone": {
+        "q": "Existe-t-elle sur iPhone ?",
+        "r": "Pas encore : elle est d'abord proposée sur Android. Sur iPhone, votre espace client s'ouvre depuis le navigateur, avec les mêmes fonctions."
+      },
+      "reseau": {
+        "q": "Et sans réseau ?",
+        "r": "Ce que vous avez déjà consulté reste lisible, avec l'heure de sa dernière mise à jour. Une pièce photographiée hors ligne attend sur le téléphone et part dès que le réseau revient."
+      },
+      "donnees": {
+        "q": "Mes données sont-elles protégées ?",
+        "r": "Elles circulent chiffrées entre votre téléphone et le cabinet, et ne sont visibles que de votre entreprise et de l'équipe qui suit votre dossier."
+      }
+    }
   }
 }

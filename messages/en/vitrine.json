@@ -225,7 +225,9 @@
     "notreHistoire": "Our story",
     "notreEquipe": "Our team",
     "nosPartenaires": "Our partners",
-    "contactezNous": "Contact us"
+    "contactezNous": "Contact us",
+    "nousRejoindre": "Join us",
+    "application": "Mobile app"
   },
   "partenaires": {
     "kicker": "Our partners",
@@ -287,10 +289,58 @@
     "facultatif": "(optional)",
     "messagePlaceholder": "Your situation in two lines, if you wish.",
     "consentement": "I agree that the firm may use this information to handle my request.",
+    "consentementWhatsapp": "I agree that the firm may write to me on WhatsApp at this number about my request (optional).",
     "envoyer": "Send my request",
     "envoyerWhatsapp": "Send on WhatsApp",
     "objet": "Request — {sujet}",
     "corpsIntro": "Hello,\n\nI would like to be contacted about: {sujet}.",
-    "confirmation": "Your mail client is opening: send the message so the request reaches us."
+    "confirmation": "Your mail client is opening: send the message so the request reaches us.",
+    "projetTitre": "Your project, in a few answers",
+    "projetDetail": "Optional. What you tell us here will not be asked again on the phone: your file opens already filled in.",
+    "choisir": "Choose…",
+    "oui": "Yes",
+    "non": "No",
+    "enregistrement": {
+      "enCours": "Recording your request…",
+      "reussi": "Your request is recorded: a member of the firm will call you back on the number given.",
+      "echec": "Your request could not be recorded ({motif}). Your WhatsApp message remains the way to reach us.",
+      "indisponible": "the recording service is not responding"
+    },
+    "localisation": {
+      "chargement": "Loading regions…",
+      "indisponible": "The list of places is temporarily unavailable: type the town and the neighbourhood.",
+      "choisir": "Choose…",
+      "region": "Region",
+      "departement": "Division",
+      "arrondissement": "Subdivision",
+      "ville": "Town or locality",
+      "villes": "Towns",
+      "localites": "Villages and localities",
+      "autreVille": "Other town or locality…",
+      "quartier": "Neighbourhood",
+      "autreQuartier": "Other neighbourhood…",
+      "quartierPartiel": "Your neighbourhood is not listed? Choose “Other neighbourhood” and type it."
+    },
+    "parcours": {
+      "titre": "How would you like to proceed?",
+      "formulaire": "I fill in the form",
+      "formulaireDetail": "You know your project: legal form, activities, office. Allow ten minutes.",
+      "rendezVous": "I prefer an appointment",
+      "rendezVousDetail": "An adviser fills in the file with you, at the firm or online. The file fee is the same.",
+      "mode": "Where is the appointment held?",
+      "presentiel": "At the firm",
+      "enLigne": "Online (video call)",
+      "creneau": "Choose a time slot",
+      "chargement": "Reading the time slots…",
+      "aucun": "No slot is free right now: call the firm, or fill in the form.",
+      "indisponible": "The time slots cannot be read right now: try again shortly, or call the firm.",
+      "courrielRequis": "Your email address is required: the confirmation and your file code are sent there.",
+      "penalite": "A missed appointment without notice is penalised: let the firm know if you cannot come.",
+      "dejaPaye": "I already have a file code (appointment booked, or file fee already paid)",
+      "code": "Your file code",
+      "codeAide": "It is in the firm's email, in the form K7M4-Q2XP. Fees already paid are found and deducted.",
+      "rdvConfirme": "Your appointment is booked: {quand}. The confirmation and your file code are sent to your email address.",
+      "rattachee": "Your request is added to your file. File fee already paid: {montant} FCFA, deducted from your quote."
+    }
   }
 }

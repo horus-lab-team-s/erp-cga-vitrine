@@ -45,12 +45,12 @@ export function AcceptationProforma({
           minLength={2}
           maxLength={120}
           autoComplete="name"
-          placeholder="Ex. : Jean Mbida, gérant"
+          placeholder="Ex. : Jean Mbida, fondateur"
         />
       </label>
       <label className="proforma__case">
         <input type="checkbox" name="engagement" value="oui" required />
-        <span>J&rsquo;accepte cette proposition au montant indiqué ; mon accord engage l&rsquo;entreprise que je représente.</span>
+        <span>J&rsquo;accepte cette proposition au montant indiqué ; mon accord m&rsquo;engage, ainsi que l&rsquo;entreprise que je représente ou que je crée.</span>
       </label>
       {/* ⚠️ `bouton--principal`, la classe qui existe. `bouton--primaire`, écrite ici au
           premier jet, n'est définie nulle part : le geste qui engage le client

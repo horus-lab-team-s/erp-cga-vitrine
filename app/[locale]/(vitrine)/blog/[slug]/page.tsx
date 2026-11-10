@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { adressePublique, alternatives } from "@/app/lib/site";
 
 import type { Article, Bloc } from "@/app/lib/blog";
 import { lireArticle, lireSlugs } from "@/app/lib/contenu-vitrine";
@@ -50,13 +51,14 @@ export async function generateMetadata({
   const { article } = trouve;
 
   const t = await getTranslations({ locale, namespace: "vitrine.blog" });
-  const chemin = `/${locale}/blog/${article.slug}`;
+  // ⚠️ 20 octobre 2026 : sans `/fr` pour le français, qui redirige. Voir `adressePublique`.
+  const chemin = adressePublique(locale, `/blog/${article.slug}`);
 
   return {
+    alternates: alternatives(locale, `/blog/${article.slug}`),
     title: article.titre,
     description: article.accroche,
     keywords: article.motsCles,
-    alternates: { canonical: chemin },
     openGraph: {
       type: "article",
       url: chemin,
