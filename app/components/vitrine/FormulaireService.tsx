@@ -211,10 +211,11 @@ export function FormulaireService({
    * L'écran dit ce qui s'est passé, et le cabinet reçoit le message de toute
    * façon.
    */
-  function enregistrer() {
-    if (resultat === "en-cours") return;
+  /** Rend `true` quand la demande est entrée chez le cabinet. */
+  function enregistrer(): Promise<boolean> {
+    if (resultat === "en-cours") return Promise.resolve(false);
     setResultat("en-cours");
-    deposerUneDemande({
+    return deposerUneDemande({
       demarche,
       nom,
       telephone,
@@ -231,8 +232,15 @@ export function FormulaireService({
       consentementContact: consent,
       consentementWhatsapp: accordWhatsapp,
       origine: `vitrine-${demarche.toLowerCase()}`,
-    }).then(setResultat, () =>
-      setResultat({ enregistree: false, motif: t("enregistrement.indisponible") }),
+    }).then(
+      (reponse) => {
+        setResultat(reponse);
+        return reponse.enregistree;
+      },
+      () => {
+        setResultat({ enregistree: false, motif: t("enregistrement.indisponible") });
+        return false;
+      },
     );
   }
 
@@ -240,13 +248,17 @@ export function FormulaireService({
     evenement.preventDefault();
     // Un rendez-vous sans créneau ne part pas : le bouton le dit, le serveur le refuserait.
     if (enRendezVous && !rdvDebut) return;
-    enregistrer();
-    // Un rendez-vous ne passe que par l'enregistrement : la messagerie n'a rien à y ajouter,
-    // et lui demander d'« envoyer le message » le ferait douter de sa réservation.
-    if (enRendezVous) return;
-    const objet = encodeURIComponent(t("objet", { sujet }));
-    window.location.href = `mailto:${DESTINATAIRE}?subject=${objet}&body=${encodeURIComponent(corps())}`;
-    setEnvoye(true);
+    // ⚠️ 10 novembre 2026 : LA MESSAGERIE N'EST PLUS QU'UN SECOURS. Elle s'ouvrait à chaque
+    // envoi, à côté de « Votre demande est enregistrée », avec « envoyez le message pour que
+    // la demande nous parvienne » : la cliente croyait devoir encore écrire, alors que sa
+    // demande était déjà chez le cabinet. Elle ne s'ouvre plus que si l'enregistrement a
+    // échoué. Un rendez-vous, lui, ne passe que par l'enregistrement.
+    void enregistrer().then((enregistree) => {
+      if (enregistree || enRendezVous) return;
+      const objet = encodeURIComponent(t("objet", { sujet }));
+      window.location.href = `mailto:${DESTINATAIRE}?subject=${objet}&body=${encodeURIComponent(corps())}`;
+      setEnvoye(true);
+    });
   }
 
   const etiquette = "formulaire-service__etiquette";
